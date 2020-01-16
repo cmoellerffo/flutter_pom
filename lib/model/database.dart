@@ -4,18 +4,18 @@ import 'package:flutter_pom/model/table.dart';
 import 'package:sqflite/sqflite.dart' as b;
 
 abstract class Database {
+  Map<Type, Table> _tables;
+  Map<Type, ModelContext> _modelTables = <Type, ModelContext>{};
 
   String _name;
   /// Gets the database name
   String get dbName => _name;
 
-  Map<Type, Table> _tables;
-  Map<Type, ModelContext> _modelTables = <Type, ModelContext>{};
-
   b.Database _db;
   /// Returns the database handle
   b.Database get dbHandle => _db;
 
+  /// Gets or sets whether the connection gets opened automatically
   bool autoOpen = true;
 
   /// Creates a new Instance
@@ -56,5 +56,4 @@ abstract class Database {
   Future<void> close() async {
     return _db.close();
   }
-
 }

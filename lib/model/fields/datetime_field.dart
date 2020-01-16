@@ -25,4 +25,10 @@ class DateTimeField extends Field<DateTime> {
     return DateFormat(sqlDateFormat).format(value);
   }
 
+  @override
+  bool get supportsPrimaryKey => false;
+
+  @override
+  DateTime get defaultValue => DateTime.now();
+
 }

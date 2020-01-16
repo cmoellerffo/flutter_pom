@@ -1,5 +1,7 @@
 library flutter_pom;
 
+import 'package:flutter_pom/errors/missing_primary_key_error.dart';
+import 'package:flutter_pom/errors/multiple_primary_key_error.dart';
 import 'package:flutter_pom/model/field.dart';
 
 abstract class Table {
@@ -27,11 +29,10 @@ abstract class Table {
   void _initializeFields() {
     _fields = initializeFields();
     if (_hasDuplicatePrimaryKey) {
-      throw UnsupportedError("You have defined multiple primary keys for your database which is currently not supported.");
+      throw MultiplePrimaryKeyError(this);
     }
-
     if (!_hasPrimaryKey) {
-      throw UnsupportedError("You have to define at least on 'primary key' inside your table.");
+      throw MissingPrimaryKeyError(this);
     }
   }
 
@@ -54,6 +55,7 @@ abstract class Table {
 
   /// Creates a new instance
   Table getInstance();
+
   /// Initializes all fields
   List<Field> initializeFields();
 
@@ -61,7 +63,11 @@ abstract class Table {
   static Table map(Map<String, dynamic> data, Table table) {
     for (var key in data.keys) {
       var field = table._getField(key);
-      field.fromSqlCompatibleValue(data[key].toString());
+      if (data[key] != null) {
+        field.fromSqlCompatibleValue(data[key].toString());
+      } else {
+        field.fromSqlCompatibleValue(null);
+      }
     }
     return table;
   }

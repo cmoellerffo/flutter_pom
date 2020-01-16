@@ -21,4 +21,10 @@ class DoubleField extends Field<double> {
     return value.toString();
   }
 
+  @override
+  bool get supportsPrimaryKey => false;
+
+  @override
+  double get defaultValue => 0;
+
 }

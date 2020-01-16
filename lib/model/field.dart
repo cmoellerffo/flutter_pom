@@ -1,3 +1,5 @@
+import 'package:flutter_pom/errors/field_constraint_error.dart';
+
 abstract class Field<T> {
 
   String _name;
@@ -9,8 +11,12 @@ abstract class Field<T> {
   T get value => _value;
   /// Sets the value
   set value(T value) {
-    _value = value;
-    markDirty();
+    if (value == null && isNotNull) {
+      throw FieldConstraintError(this, "Unable to set NULL to a NOT NULL field.");
+    } else {
+      _value = value;
+      markDirty();
+    }
   }
 
   bool _dirty = false;
@@ -50,13 +56,20 @@ abstract class Field<T> {
 
   /// Sets the field as primary key
   Field primaryKey() {
-    _primaryKey = true;
-    return this;
+    if (supportsPrimaryKey) {
+      _primaryKey = true;
+      return this;
+    } else {
+      throw FieldConstraintError(this, "This field cannot be made a primary key");
+    }
   }
 
   /// Sets the fields requirement to NOT NULL
   Field notNull() {
     _notNull = true;
+    if (value == null) {
+      _value = defaultValue;
+    }
     return this;
   }
 
@@ -65,7 +78,7 @@ abstract class Field<T> {
     if (supportsAutoIncrement()) {
       _autoIncrement = true;
     } else {
-      throw Exception("The field does not support auto increment");
+      throw FieldConstraintError(this, "The field does not support auto increment");
     }
     return this;
   }
@@ -81,5 +94,8 @@ abstract class Field<T> {
 
   /* Abstract getters */
   bool supportsAutoIncrement();
+  bool get supportsPrimaryKey;
   String get sqlType;
+
+  T get defaultValue;
 }

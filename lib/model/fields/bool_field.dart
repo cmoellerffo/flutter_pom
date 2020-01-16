@@ -21,4 +21,10 @@ class BoolField extends Field<bool> {
     return (this.value ? "1" : "0");
   }
 
+  @override
+  bool get supportsPrimaryKey => false;
+
+  @override
+  bool get defaultValue => false;
+
 }

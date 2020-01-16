@@ -30,4 +30,10 @@ class KeyField<T extends Table> extends IntegerField {
     return binding.idField.value;
   }
 
+  @override
+  bool get supportsPrimaryKey => true;
+
+  @override
+  int get defaultValue => 0;
+
 }

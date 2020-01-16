@@ -22,4 +22,10 @@ class IntegerField extends Field<int> {
   // TODO: implement sqlType
   String get sqlType => "INTEGER";
 
+  @override
+  bool get supportsPrimaryKey => true;
+
+  @override
+  int get defaultValue => 0;
+
 }

@@ -39,4 +39,10 @@ class SecureStringField extends Field<String> {
     var sha = sha1.convert(bytes);
     return sha.toString();
   }
+
+  @override
+  bool get supportsPrimaryKey => false;
+
+  @override
+  String get defaultValue => "";
 }

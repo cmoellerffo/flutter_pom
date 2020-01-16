@@ -1,7 +1,11 @@
 import 'package:flutter_pom/model/field.dart';
 
 class StringField extends Field<String> {
-  StringField(String name) : super(name);
+  StringField(String name) : super(name) {
+    if (isNotNull) {
+      init("");
+    }
+  }
 
   @override
   void fromSqlCompatibleValue(String value) {
@@ -20,5 +24,11 @@ class StringField extends Field<String> {
 
   @override
   String get sqlType => "TEXT";
+
+  @override
+  bool get supportsPrimaryKey => false;
+
+  @override
+  String get defaultValue => "";
 
 }
