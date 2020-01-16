@@ -16,6 +16,8 @@ dependencies:
   path_provider: ^1.5.1
   # path
   path: ^1.6.4
+  #dealing with internationalization
+  intl: ^0.16.0
 
 
 dev_dependencies:

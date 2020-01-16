@@ -1,11 +1,15 @@
 import 'package:flutter_pom/flutter_pom.dart';
 
-class KeyField extends Field<Field> {
-  KeyField(String name) : super(name);
+class KeyField<T extends Table> extends IntegerField {
+  KeyField(String name, T binding) : super(name) {
+    this.binding = binding;
+  }
+
+  T binding;
 
   @override
   void fromSqlCompatibleValue(String value) {
-    // TODO: implement fromSqlCompatibleValue
+    this.value = int.parse(value);
   }
 
   @override
@@ -23,8 +27,7 @@ class KeyField extends Field<Field> {
 
   @override
   String toSqlCompatibleValue() {
-    // TODO: implement toSqlCompatibleValue
-    return null;
+    return binding.idField.value;
   }
 
 }

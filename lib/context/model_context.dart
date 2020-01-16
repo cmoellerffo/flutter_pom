@@ -1,5 +1,6 @@
 import 'package:flutter_pom/flutter_pom.dart';
-import 'package:flutter_pom/model/base_model_context.dart';
+import 'package:flutter_pom/context/base_model_context.dart';
+
 
 class ModelContext<T extends Table> implements BaseModelContext<T> {
 

@@ -1,6 +1,5 @@
 library flutter_pom;
 
-import 'package:flutter_pom/model/database.dart';
 import 'package:flutter_pom/model/field.dart';
 
 abstract class Table {
@@ -19,6 +18,7 @@ abstract class Table {
     _initializeFields();
   }
 
+  /// Returns the idField for this table
   Field get idField {
     return _fields.firstWhere((f) => f.isPrimaryKey);
   }
@@ -35,7 +35,6 @@ abstract class Table {
     }
   }
 
-  List<Field> initializeFields();
 
   /// Returns if there is more than one primary key
   bool get _hasDuplicatePrimaryKey {
@@ -53,9 +52,12 @@ abstract class Table {
     return _fields.firstWhere((f) => f.name == name);
   }
 
+  /// Creates a new instance
   Table getInstance();
+  /// Initializes all fields
+  List<Field> initializeFields();
 
-  /* Abstract Members */
+  /* Static Members */
   static Table map(Map<String, dynamic> data, Table table) {
     for (var key in data.keys) {
       var field = table._getField(key);

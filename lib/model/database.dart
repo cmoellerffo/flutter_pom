@@ -1,5 +1,5 @@
-import 'package:flutter_pom/model/base_model_context.dart';
-import 'package:flutter_pom/model/model_context.dart';
+import 'package:flutter_pom/context/base_model_context.dart';
+import 'package:flutter_pom/context/model_context.dart';
 import 'package:flutter_pom/model/table.dart';
 import 'package:sqflite/sqflite.dart' as b;
 
@@ -10,7 +10,6 @@ abstract class Database {
   String get dbName => _name;
 
   Map<Type, Table> _tables;
-  Map<Type, Table> initializeDatabase();
   Map<Type, ModelContext> _modelTables = <Type, ModelContext>{};
 
   b.Database _db;
@@ -31,6 +30,9 @@ abstract class Database {
     _tables = initializeDatabase();
   }
 
+  /// Initializes the database
+  Map<Type, Table> initializeDatabase();
+
   /// Returns the table for the requested model type
   BaseModelContext<T> of<T extends Table>() {
     if (_modelTables.containsKey(T)) {
@@ -48,6 +50,11 @@ abstract class Database {
   Future<void> open() async {
     _db = await b.openDatabase(dbName);
     await _initializeDatabase();
+  }
+
+  /// Close the connection
+  Future<void> close() async {
+    return _db.close();
   }
 
 }

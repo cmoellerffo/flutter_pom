@@ -33,10 +33,8 @@ abstract class Field<T> {
   /// Gets the create fields revision
   int get revision => _revision;
 
-  init(T v) {
-    this.value = v;
-  }
 
+  /// Creates a new instance
   Field(this._name, [this._value]);
 
   /* Extension Methods */
@@ -56,6 +54,7 @@ abstract class Field<T> {
     return this;
   }
 
+  /// Sets the fields requirement to NOT NULL
   Field notNull() {
     _notNull = true;
     return this;
@@ -69,6 +68,11 @@ abstract class Field<T> {
       throw Exception("The field does not support auto increment");
     }
     return this;
+  }
+
+  /// Initialize the value
+  init(T v) {
+    this.value = v;
   }
 
   /* Abstract methods */

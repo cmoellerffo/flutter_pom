@@ -1,5 +1,6 @@
 import 'package:flutter_pom/flutter_pom.dart';
 
+/// Abstract class
 abstract class BaseModelContext<T extends Table> {
   Future<T> get(int id);
   Future<List<T>> getRange({String where = "", String orderBy = ""});
@@ -11,5 +12,4 @@ abstract class BaseModelContext<T extends Table> {
   Future<void> deleteRange(List<T> objList);
   Future<void> deleteById(int id);
   Future<void> deleteAll();
-
 }

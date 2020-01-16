@@ -9,4 +9,7 @@ export 'model/database.dart';
 export 'model/fields/integer_field.dart';
 export 'model/fields/id_field.dart';
 export 'model/fields/string_field.dart';
+export 'model/fields/double_field.dart';
+export 'model/fields/datetime_field.dart';
+export 'model/fields/bool_field.dart';
 
