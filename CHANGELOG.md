@@ -1,7 +1,13 @@
+## [0.0.4] - New Field-types added
+
+* Added SecureStringField to provide a hashed database field for storing passwords etc.
+* Changed field signature of StringField from VARCHAR(255) to TEXT
+
 ## [0.0.3] - Added License
 
 * New MIT License agreement was added to the root package
 * Fixed install instructions to make use of pub.dev instead of using a local path 
+* Changed Homepage to a secure URI
 
 ## [0.0.2] - Publishing specs satisfied
 

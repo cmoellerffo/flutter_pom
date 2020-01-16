@@ -1,9 +1,7 @@
 import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/context/base_model_context.dart';
 
-
 class ModelContext<T extends Table> implements BaseModelContext<T> {
-
   Database _db;
   T _table;
 
@@ -46,8 +44,11 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     var updatedFields = obj.fields.where((f) => f.dirty && !f.isPrimaryKey);
 
     if (updatedFields.length > 0) {
-      var fieldValues = updatedFields.map((f) => "${f.name} = ${f.toSqlCompatibleValue()}").join(",");
-      var statement = "UPDATE ${obj.tableName} SET $fieldValues WHERE ${obj.idField.name} = ${obj.idField.toSqlCompatibleValue()}";
+      var fieldValues = updatedFields
+          .map((f) => "${f.name} = ${f.toSqlCompatibleValue()}")
+          .join(",");
+      var statement =
+          "UPDATE ${obj.tableName} SET $fieldValues WHERE ${obj.idField.name} = ${obj.idField.toSqlCompatibleValue()}";
 
       return await _db.dbHandle.execute(statement);
     }
@@ -61,9 +62,16 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   /// Puts an item
   Future<void> put(T obj) async {
-    var fieldNames = obj.fields.where((f) => !f.isAutoIncrement).map((f) => f.name).join(',');
-    var fieldValues = obj.fields.where((f) => !f.isAutoIncrement).map((f) => f.toSqlCompatibleValue()).join(',');
-    var statement = "INSERT INTO ${obj.tableName} ($fieldNames) VALUES($fieldValues)";
+    var fieldNames = obj.fields
+        .where((f) => !f.isAutoIncrement)
+        .map((f) => f.name)
+        .join(',');
+    var fieldValues = obj.fields
+        .where((f) => !f.isAutoIncrement)
+        .map((f) => f.toSqlCompatibleValue())
+        .join(',');
+    var statement =
+        "INSERT INTO ${obj.tableName} ($fieldNames) VALUES($fieldValues)";
 
     return await _db.dbHandle.execute(statement);
   }
@@ -85,7 +93,8 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   /// Deletes an item by id
   Future<void> deleteById(int id) async {
-    var statement = "DELETE FROM ${_table.tableName} WHERE ${_table.idField.name} = $id";
+    var statement =
+        "DELETE FROM ${_table.tableName} WHERE ${_table.idField.name} = $id";
     return await _db.dbHandle.execute(statement);
   }
 
@@ -93,7 +102,6 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   Future<void> deleteAll() async {
     return await _db.dbHandle.execute("DELETE FROM ${_table.tableName}");
   }
-
 
   /** Non interface methods **/
 
@@ -103,7 +111,8 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     if (tableExists && drop) {
       _drop();
     } else if (!tableExists) {
-      var fieldDefinitions = _table.fields.map((f) => _buildCreateFieldStatement(f));
+      var fieldDefinitions =
+          _table.fields.map((f) => _buildCreateFieldStatement(f));
       var createStatement =
           "CREATE TABLE IF NOT EXISTS ${_table.tableName} (${fieldDefinitions.join(',')})";
       await _db.dbHandle.execute(createStatement);
@@ -125,7 +134,6 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
     return createStatement;
   }
-
 
   Future<bool> _exists(Table t) async {
     return false;

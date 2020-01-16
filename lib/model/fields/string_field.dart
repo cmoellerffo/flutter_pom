@@ -19,6 +19,6 @@ class StringField extends Field<String> {
   }
 
   @override
-  String get sqlType => "VARCHAR(255)";
+  String get sqlType => "TEXT";
 
 }
