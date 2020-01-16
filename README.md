@@ -1,6 +1,6 @@
 # flutter_pom
 
-A flutter persistent object mapper library
+Flutter Persistent Object Mapper based on sqflite provides model based SQLite access including automatic database creation
 
 ## Installing
 
@@ -10,8 +10,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  flutter_pom:
-    path: path/to/flutter_pom/
+  flutter_pom: ^0.0.3
 ```
 
 ### Install the plugin

@@ -1,8 +1,7 @@
 name: flutter_pom
-description: Flutter Persistent Object Mapper
-version: 0.0.1
-author: Christian Moeller
-homepage:
+description: Flutter Persistent Object Mapper based on sqflite provides model based SQLite access including automatic database creation
+version: 0.0.2
+homepage: http://vivasecur.de
 
 environment:
   sdk: ">=2.2.0 <3.0.0"
