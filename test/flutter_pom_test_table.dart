@@ -34,5 +34,71 @@ class FlutterPomTestTable extends Table {
       doubleField
     ];
   }
+}
 
+
+class FlutterPomTestTableDuplicateKey extends Table {
+  FlutterPomTestTableDuplicateKey() : super("flutter_pom_test");
+
+  IdField id = IdField("id").autoIncrement();
+
+  IntegerField intField = IntegerField("int_field");
+
+  StringField stringField = StringField("string_field").primaryKey();
+
+  @override
+  Table getInstance() {
+    return FlutterPomTestTable();
+  }
+
+  @override
+  List<Field> initializeFields() {
+    return [
+      id,
+      intField,
+      stringField,
+    ];
+  }
+}
+
+class FlutterPomTestTableMissingKey extends Table {
+  FlutterPomTestTableMissingKey() : super("flutter_pom_test");
+
+  IntegerField intField = IntegerField("int_field");
+
+  StringField stringField = StringField("string_field");
+
+  @override
+  Table getInstance() {
+    return FlutterPomTestTable();
+  }
+
+  @override
+  List<Field> initializeFields() {
+    return [
+      intField,
+      stringField,
+    ];
+  }
+}
+
+class FlutterPomTestTableDuplicateName extends Table {
+  FlutterPomTestTableDuplicateName() : super("flutter_pom_test");
+
+  IntegerField intField = IntegerField("int_field");
+
+  StringField stringField = StringField("int_field");
+
+  @override
+  Table getInstance() {
+    return FlutterPomTestTable();
+  }
+
+  @override
+  List<Field> initializeFields() {
+    return [
+      intField,
+      stringField,
+    ];
+  }
 }

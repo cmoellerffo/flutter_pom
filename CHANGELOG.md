@@ -1,3 +1,8 @@
+## [0.0.8] - 16.01.2020
+
+* Added more reliability and flexibility for value to field mapping of various types
+* Implemented more unit tests for better coverage
+
 ## [0.0.7] - 16.01.2020
 
 * Removed unnecessary constraints disabling primary-keys for several fields

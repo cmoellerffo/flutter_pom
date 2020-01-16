@@ -25,20 +25,14 @@ void main() async {
         pom.FieldConstraintError,
         pom.MissingPrimaryKeyError,
         pom.MultiplePrimaryKeyError,
-        pom.TableConfigurationError
+        pom.TableConfigurationError,
+        pom.MissingFieldError,
+        pom.DuplicateFieldError
       ].forEach((dynamic value) {
         expect(value, isNotNull);
       });
     });
 
-    // Check the id field constraints
-    test('IdField constraints', () {
-      pom.IdField idField = pom.IdField("id");
-
-      assert(idField.name == "id");
-      assert(idField.isPrimaryKey);
-      assert(!idField.isAutoIncrement);
-    });
 
     // Check generic field constraints
     test('Primary Keys field constraints', () {
@@ -63,12 +57,35 @@ void main() async {
     });
 
     // Check table constraints
-    test('Table setup', () {
+    group('Table setup', () {
       var table = FlutterPomTestTable();
 
-      expect(table.idField, isInstanceOf<pom.IdField>());
-      assert(table.idField == table.id);
-      assert(table.fields.length > 0);
+      test('Table index', () {
+        expect(table.idField, isInstanceOf<pom.IdField>());
+        assert(table.idField == table.id);
+      });
+
+      test('Multiple Primary keys', () {
+        expect(() => FlutterPomTestTableDuplicateKey(),
+            throwsA(m.TypeMatcher<pom.MultiplePrimaryKeyError>()));
+      });
+      test('Missing Primary keys', () {
+        expect(() => FlutterPomTestTableMissingKey(),
+            throwsA(m.TypeMatcher<pom.MissingPrimaryKeyError>()));
+      });
+      test('Duplicate Field names', () {
+        expect(() => FlutterPomTestTableDuplicateName(),
+            throwsA(m.TypeMatcher<pom.DuplicateFieldError>()));
+      });
+    });
+
+    // Check the id field constraints
+    test('Field "id" constraints', () {
+      pom.IdField idField = pom.IdField("id");
+
+      assert(idField.name == "id");
+      assert(idField.isPrimaryKey);
+      assert(!idField.isAutoIncrement);
     });
 
     // Test field value mapping
@@ -83,7 +100,7 @@ void main() async {
     });
 
     // Test field value mapping
-    test('Field "int_field" mapping', () {
+    test('Field "int" mapping', () {
       var table = FlutterPomTestTable();
 
       pom.Table.map({
@@ -94,7 +111,7 @@ void main() async {
     });
 
     // Test field value mapping
-    test('Field "string_field" mapping', () {
+    test('Field "string" mapping', () {
       var table = FlutterPomTestTable();
 
       pom.Table.map({
@@ -127,7 +144,7 @@ void main() async {
     });
 
     // Test field value mapping
-    test('Field "datetime_field" mapping', () {
+    test('Field "datetime" mapping', () {
       var table = FlutterPomTestTable();
 
       expect(pom.Table.map({"datetime_field": "2019-01-01 10:10:10"}, table), isInstanceOf<pom.Table>());
@@ -140,10 +157,15 @@ void main() async {
       assert(table.dateTimeField.value.second == 10);
 
       assert(table.dateTimeField.dirty);
+
+      expect(() => pom.Table.map({"datetime_field": 0.4}, table), throwsA(m.TypeMatcher<pom.FieldConstraintError>()));
+      expect(pom.Table.map({"datetime_field": 12345678}, table), isInstanceOf<pom.Table>());
+      expect(pom.Table.map({"datetime_field": DateTime.now()}, table), isInstanceOf<pom.Table>());
+
     });
 
     // Test field value mapping
-    test('Field "bool_field" mapping', () {
+    test('Field "bool" mapping', () {
       var table = FlutterPomTestTable();
 
       pom.Table.map({
@@ -163,6 +185,26 @@ void main() async {
       }, table);
 
       assert(table.boolField.value == true);
+    });
+
+    // Test field value mapping
+    test('Field "double" mapping', () {
+      var table = FlutterPomTestTable();
+
+      pom.Table.map({
+        "double_field": 0.3,
+      }, table);
+
+      assert(table.doubleField.value == 0.3);
+
+      expect(() => pom.Table.map({"double_field": "0.3"}, table), throwsA(m.TypeMatcher<pom.FieldConstraintError>()));
+    });
+
+    // Test field value mapping
+    test('Field "unkown" mapping', () {
+      var table = FlutterPomTestTable();
+
+      expect(() => pom.Table.map({"unknown": "0.3"}, table), throwsA(m.TypeMatcher<pom.MissingFieldError>()));
     });
   });
 }

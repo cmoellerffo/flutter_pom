@@ -1,7 +1,11 @@
 library flutter_pom;
 
+import 'package:flutter_pom/errors/field_constraint_error.dart';
+import 'package:flutter_pom/errors/missing_field_error.dart';
 import 'package:flutter_pom/errors/missing_primary_key_error.dart';
 import 'package:flutter_pom/errors/multiple_primary_key_error.dart';
+import 'package:flutter_pom/errors/table_configuration_error.dart';
+import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/model/field.dart';
 
 abstract class Table {
@@ -28,12 +32,25 @@ abstract class Table {
   /// initializes all fields
   void _initializeFields() {
     _fields = initializeFields();
+
+    if (_hasDuplicateField) {
+      throw DuplicateFieldError(this, "Field names have to be unique.");
+    }
     if (_hasDuplicatePrimaryKey) {
       throw MultiplePrimaryKeyError(this);
     }
     if (!_hasPrimaryKey) {
       throw MissingPrimaryKeyError(this);
     }
+  }
+
+  bool get _hasDuplicateField {
+    for(var field in _fields) {
+      if (_fields.where((f) => f.name == field.name).length > 1) {
+        return true;
+      }
+    }
+    return false;
   }
 
 
@@ -50,6 +67,7 @@ abstract class Table {
   }
 
   Field _getField(String name) {
+    if (!_fields.any((f) => f.name == name)) return null;
     return _fields.firstWhere((f) => f.name == name);
   }
 
@@ -63,8 +81,17 @@ abstract class Table {
   static Table map(Map<String, dynamic> data, Table table) {
     for (var key in data.keys) {
       var field = table._getField(key);
+
+      if (field == null) {
+        throw MissingFieldError(table, 'Cannot map data to field "$key". Field was not found.');
+      }
+
       if (data[key] != null) {
-        field.fromSqlCompatibleValue(data[key]);
+        try {
+          field.fromSqlCompatibleValue(data[key]);
+        } catch (e) {
+          throw FieldConstraintError(field, 'Cannot map data to field "${field.name}". ${e.toString()}');
+        }
       } else {
         field.fromSqlCompatibleValue(null);
       }
