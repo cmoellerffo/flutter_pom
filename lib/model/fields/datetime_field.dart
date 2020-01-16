@@ -7,8 +7,8 @@ class DateTimeField extends Field<DateTime> {
   final String sqlDateFormat = "yyyy-MM-dd HH:mm:ss";
 
   @override
-  void fromSqlCompatibleValue(String value) {
-    this.value = DateFormat(sqlDateFormat).parse(value);
+  void fromSqlCompatibleValue(dynamic value) {
+    this.value = DateFormat(sqlDateFormat).parse(value.toString());
   }
 
   @override
@@ -26,7 +26,7 @@ class DateTimeField extends Field<DateTime> {
   }
 
   @override
-  bool get supportsPrimaryKey => false;
+  bool get supportsPrimaryKey => true;
 
   @override
   DateTime get defaultValue => DateTime.now();

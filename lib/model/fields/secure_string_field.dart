@@ -12,7 +12,7 @@ class SecureStringField extends Field<String> {
   }
 
   @override
-  void fromSqlCompatibleValue(String value) {
+  void fromSqlCompatibleValue(dynamic value) {
     this.value = value;
   }
 

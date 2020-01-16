@@ -43,10 +43,8 @@ void main() async {
     // Check generic field constraints
     test('Primary Keys field constraints', () {
       <pom.Field>[
-        pom.StringField("string_field"),
         pom.SecureStringField("secure_string_field"),
-        pom.DateTimeField("datetime_field"),
-        pom.DoubleField("double_field")
+        pom.BoolField("bool_field")
       ].forEach((field) {
         expect(() => field.primaryKey(), throwsA(const m.TypeMatcher<pom.FieldConstraintError>()));
       });
@@ -142,6 +140,29 @@ void main() async {
       assert(table.dateTimeField.value.second == 10);
 
       assert(table.dateTimeField.dirty);
+    });
+
+    // Test field value mapping
+    test('Field "bool_field" mapping', () {
+      var table = FlutterPomTestTable();
+
+      pom.Table.map({
+        "bool_field": true,
+      }, table);
+
+      assert(table.boolField.value == true);
+
+      pom.Table.map({
+        "bool_field": 0,
+      }, table);
+
+      assert(table.boolField.value == false);
+
+      pom.Table.map({
+        "bool_field": "true",
+      }, table);
+
+      assert(table.boolField.value == true);
     });
   });
 }

@@ -4,8 +4,8 @@ class IntegerField extends Field<int> {
   IntegerField(String name) : super(name);
 
   @override
-  void fromSqlCompatibleValue(String value) {
-    init(int.parse(value));
+  void fromSqlCompatibleValue(dynamic value) {
+    this.value = value;
   }
 
   @override

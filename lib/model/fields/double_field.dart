@@ -4,8 +4,8 @@ class DoubleField extends Field<double> {
   DoubleField(String name) : super(name);
 
   @override
-  void fromSqlCompatibleValue(String value) {
-    init(double.parse(value));
+  void fromSqlCompatibleValue(dynamic value) {
+    this.value = value;
   }
 
   @override
@@ -22,7 +22,7 @@ class DoubleField extends Field<double> {
   }
 
   @override
-  bool get supportsPrimaryKey => false;
+  bool get supportsPrimaryKey => true;
 
   @override
   double get defaultValue => 0;

@@ -64,7 +64,7 @@ abstract class Table {
     for (var key in data.keys) {
       var field = table._getField(key);
       if (data[key] != null) {
-        field.fromSqlCompatibleValue(data[key].toString());
+        field.fromSqlCompatibleValue(data[key]);
       } else {
         field.fromSqlCompatibleValue(null);
       }

@@ -8,7 +8,7 @@ class StringField extends Field<String> {
   }
 
   @override
-  void fromSqlCompatibleValue(String value) {
+  void fromSqlCompatibleValue(dynamic value) {
     this.value = value;
   }
 
@@ -26,7 +26,7 @@ class StringField extends Field<String> {
   String get sqlType => "TEXT";
 
   @override
-  bool get supportsPrimaryKey => false;
+  bool get supportsPrimaryKey => true;
 
   @override
   String get defaultValue => "";

@@ -8,8 +8,8 @@ class KeyField<T extends Table> extends IntegerField {
   T binding;
 
   @override
-  void fromSqlCompatibleValue(String value) {
-    this.value = int.parse(value);
+  void fromSqlCompatibleValue(dynamic value) {
+    this.value = value;
   }
 
   @override

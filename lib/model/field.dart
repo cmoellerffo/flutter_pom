@@ -90,7 +90,7 @@ abstract class Field<T> {
 
   /* Abstract methods */
   String toSqlCompatibleValue();
-  void fromSqlCompatibleValue(String value);
+  void fromSqlCompatibleValue(dynamic value);
 
   /* Abstract getters */
   bool supportsAutoIncrement();
