@@ -1,10 +1,10 @@
 library flutter_pom;
 
+import 'package:flutter_pom/context/migration_context.dart';
 import 'package:flutter_pom/errors/field_constraint_error.dart';
 import 'package:flutter_pom/errors/missing_field_error.dart';
 import 'package:flutter_pom/errors/missing_primary_key_error.dart';
 import 'package:flutter_pom/errors/multiple_primary_key_error.dart';
-import 'package:flutter_pom/errors/table_configuration_error.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/model/field.dart';
 
@@ -76,6 +76,19 @@ abstract class Table {
 
   /// Initializes all fields
   List<Field> initializeFields();
+
+  /// Gets the revision
+  int get revision;
+
+  /// Migrates the table
+  Future<void> migrate(MigrationContext context, int fromRevision, int toRevision) async {
+    var newFields = _fields.where((f) => f.revision == toRevision);
+    if (newFields != null && newFields.length > 0) {
+      for (var field in _fields) {
+        context.addField(field);
+      }
+    }
+  }
 
   /* Static Members */
   static Table map(Map<String, dynamic> data, Table table) {

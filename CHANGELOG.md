@@ -1,3 +1,11 @@
+## [0.1.0] - 17.01.2020
+
+* Added automatic migrations and overridable migrations
+
+## [0.0.9] - 16.01.2020
+
+* Fixed update statement to include primary keys and disable auto-increment fields
+
 ## [0.0.8] - 16.01.2020
 
 * Added more reliability and flexibility for value to field mapping of various types

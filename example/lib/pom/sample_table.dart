@@ -37,4 +37,7 @@ class SampleTable extends Table {
     return item;
   }
 
+  @override
+  int get revision => 1;
+
 }

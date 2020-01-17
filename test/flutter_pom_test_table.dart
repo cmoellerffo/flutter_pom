@@ -1,5 +1,21 @@
 import 'package:flutter_pom/flutter_pom.dart';
 
+class KeyValuePair implements Serializable {
+  String key = "a";
+  String value = "b";
+
+  KeyValuePair(this.key, this.value);
+
+  @override
+  void fromJson(String value) {
+  }
+
+  @override
+  Map<String, String> toJson() {
+    return null;
+  }
+}
+
 class FlutterPomTestTable extends Table {
   FlutterPomTestTable() : super("flutter_pom_test");
 
@@ -17,6 +33,8 @@ class FlutterPomTestTable extends Table {
 
   DoubleField doubleField = DoubleField("double_field");
 
+  ObjectField<KeyValuePair> objectField = ObjectField<KeyValuePair>("object_field");
+
   @override
   Table getInstance() {
     return FlutterPomTestTable();
@@ -31,9 +49,13 @@ class FlutterPomTestTable extends Table {
       notNullField,
       boolField,
       dateTimeField,
-      doubleField
+      doubleField,
+      objectField
     ];
   }
+
+  @override
+  int get revision => 1;
 }
 
 
@@ -59,6 +81,9 @@ class FlutterPomTestTableDuplicateKey extends Table {
       stringField,
     ];
   }
+
+  @override
+  int get revision => 1;
 }
 
 class FlutterPomTestTableMissingKey extends Table {
@@ -80,6 +105,9 @@ class FlutterPomTestTableMissingKey extends Table {
       stringField,
     ];
   }
+
+  @override
+  int get revision => 1;
 }
 
 class FlutterPomTestTableDuplicateName extends Table {
@@ -101,4 +129,7 @@ class FlutterPomTestTableDuplicateName extends Table {
       stringField,
     ];
   }
+
+  @override
+  int get revision => 1;
 }

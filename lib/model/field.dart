@@ -35,7 +35,7 @@ abstract class Field<T> {
   /// Gets whether the field is marked as NOT NULL
   bool get isNotNull => _notNull;
 
-  int _revision = 0;
+  int _revision = 1;
   /// Gets the create fields revision
   int get revision => _revision;
 

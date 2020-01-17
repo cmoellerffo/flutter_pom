@@ -22,6 +22,7 @@ void main() async {
         pom.StringField,
         pom.IdField,
         pom.SecureStringField,
+        pom.ObjectField,
         pom.FieldConstraintError,
         pom.MissingPrimaryKeyError,
         pom.MultiplePrimaryKeyError,
@@ -50,7 +51,8 @@ void main() async {
         pom.StringField("string_field"),
         pom.SecureStringField("secure_string_field"),
         pom.DateTimeField("datetime_field"),
-        pom.BoolField("bool_field")
+        pom.BoolField("bool_field"),
+        pom.ObjectField("object_field")
       ].forEach((field) {
         expect(() => field.autoIncrement(), throwsA(const m.TypeMatcher<pom.FieldConstraintError>()));
       });
@@ -205,6 +207,14 @@ void main() async {
       var table = FlutterPomTestTable();
 
       expect(() => pom.Table.map({"unknown": "0.3"}, table), throwsA(m.TypeMatcher<pom.MissingFieldError>()));
+    });
+
+    // Test field value mapping
+    test('Field "object" mapping', () {
+      var table = FlutterPomTestTable();
+
+      expect(pom.Table.map({"object_field": KeyValuePair('a', 'b')}, table), isInstanceOf<pom.Table>());
+      //expect(() => pom.Table.map({"object_field": 128}, table), throwsA(m.TypeMatcher<pom.FieldConstraintError>()));
     });
   });
 }

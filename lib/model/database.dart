@@ -1,11 +1,17 @@
 import 'package:flutter_pom/context/base_model_context.dart';
+import 'package:flutter_pom/context/migration_context.dart';
 import 'package:flutter_pom/context/model_context.dart';
+import 'package:flutter_pom/errors/table_configuration_error.dart';
+import 'package:flutter_pom/model/migration_info.dart';
 import 'package:flutter_pom/model/table.dart';
 import 'package:sqflite/sqflite.dart' as b;
 
 abstract class Database {
   Map<Type, Table> _tables;
   Map<Type, ModelContext> _modelTables = <Type, ModelContext>{};
+
+  ModelContext<$MigrationInfo> _migrationContext;
+  final $MigrationInfo _migrationInfo = $MigrationInfo();
 
   String _name;
   /// Gets the database name
@@ -26,8 +32,42 @@ abstract class Database {
     }
   }
 
+  Future<void> _doMigrations() async {
+    _migrationContext = ModelContext<$MigrationInfo>(this, _migrationInfo);
+    for (var table in _tables.values) {
+
+      var tableInfo = await _migrationContext.getRange(
+          where: "${_migrationInfo.name.name} = '${table.tableName}"
+      );
+
+      if (tableInfo.length == 1) {
+        var migrationInfo = tableInfo.first;
+
+        if (migrationInfo.tableRevision.value < table.revision) {
+
+          for (var migrateVersion = migrationInfo.tableRevision.value;
+          migrateVersion <= table.revision; migrateVersion++) {
+            await table.migrate(MigrationContext(this, table), migrationInfo.tableRevision.value, migrateVersion);
+            migrationInfo.tableRevision.value = migrateVersion;
+            await _migrationContext.update(migrationInfo);
+          }
+        } else if (migrationInfo.tableRevision.value > table.revision) {
+          throw AssertionError("The table metadata for '${table.tableName}' are ahead of table the actual revision");
+        }
+      } else if (tableInfo.length == 0) {
+        var migrationInfo = $MigrationInfo();
+        migrationInfo.name.value = table.tableName;
+        migrationInfo.tableRevision.value = table.revision;
+        _migrationContext.put(migrationInfo);
+      } else if (tableInfo.length > 1) {
+        throw AssertionError("There is more than 1 migration info present for table '${table.tableName}'");
+      }
+    }
+  }
+
   Future<void> _initializeDatabase() async {
     _tables = initializeDatabase();
+    await _doMigrations();
   }
 
   /// Initializes the database

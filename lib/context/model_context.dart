@@ -5,6 +5,9 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   Database _db;
   T _table;
 
+  T get baseTable => _table;
+  Database get handle => _db;
+
   /// Creates a new model context instance
   ModelContext(Database db, T table) {
     _db = db;
@@ -41,7 +44,7 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   /// Updates the object
   Future<void> update(T obj) async {
-    var updatedFields = obj.fields.where((f) => f.dirty && !f.isPrimaryKey);
+    var updatedFields = obj.fields.where((f) => f.dirty && !f.isAutoIncrement);
 
     if (updatedFields.length > 0) {
       var fieldValues = updatedFields
@@ -112,14 +115,14 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
       _drop();
     } else if (!tableExists) {
       var fieldDefinitions =
-          _table.fields.map((f) => _buildCreateFieldStatement(f));
+          _table.fields.map((f) => buildCreateFieldStatement(f));
       var createStatement =
           "CREATE TABLE IF NOT EXISTS ${_table.tableName} (${fieldDefinitions.join(',')})";
       await _db.dbHandle.execute(createStatement);
     }
   }
 
-  String _buildCreateFieldStatement(Field f) {
+  static String buildCreateFieldStatement(Field f) {
     var createStatement = "${f.name} ${f.sqlType}";
 
     if (f.isPrimaryKey) {
