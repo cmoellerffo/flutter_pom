@@ -18,7 +18,11 @@ class $MigrationInfo extends Table {
 
   @override
   List<Field> initializeFields() {
-    return null;
+    return [
+      id,
+      name,
+      tableRevision
+    ];
   }
 
   @override

@@ -1,3 +1,36 @@
+## [0.1.8] - 22.01.2020
+
+* Changed method parameter signature of get() to use 'dynamic' instead of fields
+* Mapping of id Field in 'get' now works internally
+
+## [0.1.7] - 22.01.2020
+
+* Changed method parameter signature of get() to use Fields instead of ids.
+
+## [0.1.6] - 17.01.2020
+
+* Removed migrations for now
+
+## [0.1.5] - 17.01.2020
+
+* Bugfix release
+
+## [0.1.4] - 17.01.2020
+
+* Bugfix release
+
+## [0.1.3] - 17.01.2020
+
+* Bugfix release
+
+## [0.1.2] - 17.01.2020
+
+* Bugfix release
+
+## [0.1.1] - 17.01.2020
+
+* Bugfix release
+
 ## [0.1.0] - 17.01.2020
 
 * Added automatic migrations and overridable migrations

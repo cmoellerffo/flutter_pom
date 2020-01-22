@@ -43,7 +43,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  SampleDb db;
+  SampleDb db = SampleDb();
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -52,8 +52,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() async {
+  void _incrementCounter() async {
+
+    var sample = SampleTable.build(_counter, DateTime.now());
+    await widget.db.of<SampleTable>().put(sample);
+
+    var samples = await widget.db.of<SampleTable>().getRange();
+    samples.forEach((e) {
+      print ("${e.id.value} ${e.counterValue.value} ${e.dateTime.value}");
+    });
+
+    setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
@@ -61,17 +70,12 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
 
-      var sample = SampleTable.build(_counter, DateTime.now());
-      await widget.db.of<SampleTable>().put(sample);
     });
   }
 
   @override
-  void initState() async {
+  void initState()  {
     super.initState();
-
-    var samples = await widget.db.of<SampleTable>().getRange();
-    samples.forEach(print);
   }
 
   @override

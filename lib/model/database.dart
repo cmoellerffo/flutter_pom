@@ -27,6 +27,7 @@ abstract class Database {
   /// Creates a new Instance
   Database(String name, {this.autoOpen = true}) {
     _name = name;
+
     if (this.autoOpen) {
       open();
     }
@@ -34,10 +35,18 @@ abstract class Database {
 
   Future<void> _doMigrations() async {
     _migrationContext = ModelContext<$MigrationInfo>(this, _migrationInfo);
-    for (var table in _tables.values) {
+    _migrationContext.create();
+
+    print(_tables.length);
+    print(_tables.entries.length);
+
+    _tables.forEach((t, v) async {
+      var table = _tables[t];
+
+      print("*** Running Migration for ${table.tableName} ***");
 
       var tableInfo = await _migrationContext.getRange(
-          where: "${_migrationInfo.name.name} = '${table.tableName}"
+          where: "${_migrationInfo.name.name} = '${table.tableName}'"
       );
 
       if (tableInfo.length == 1) {
@@ -55,19 +64,25 @@ abstract class Database {
           throw AssertionError("The table metadata for '${table.tableName}' are ahead of table the actual revision");
         }
       } else if (tableInfo.length == 0) {
-        var migrationInfo = $MigrationInfo();
-        migrationInfo.name.value = table.tableName;
-        migrationInfo.tableRevision.value = table.revision;
-        _migrationContext.put(migrationInfo);
+        var newMigrationInfo = $MigrationInfo();
+        newMigrationInfo.name.value = table.tableName;
+        newMigrationInfo.tableRevision.value = table.revision;
+        await _migrationContext.put(newMigrationInfo);
+
       } else if (tableInfo.length > 1) {
-        throw AssertionError("There is more than 1 migration info present for table '${table.tableName}'");
+        await _migrationContext.deleteAll();
       }
-    }
+    });
   }
 
   Future<void> _initializeDatabase() async {
     _tables = initializeDatabase();
-    await _doMigrations();
+
+    if (_tables == null) {
+      throw AssertionError("There was no table defined for the database.");
+    }
+
+    //await _doMigrations();
   }
 
   /// Initializes the database

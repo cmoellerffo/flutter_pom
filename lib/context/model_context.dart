@@ -37,8 +37,11 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   }
 
   /// Returns an item by id
-  Future<T> get(int id) async {
-    var list = await getRange(where: "${_table.idField.name} = $id");
+  Future<T> get(dynamic id) async {
+    var temporaryEntity = _table.getInstance();
+    temporaryEntity.idField.fromSqlCompatibleValue(id);
+
+    var list = await getRange(where: "${_table.idField.name} = ${temporaryEntity.idField.toSqlCompatibleValue()}");
     return list.first;
   }
 

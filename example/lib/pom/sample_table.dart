@@ -15,6 +15,9 @@ class SampleTable extends Table {
   /// Gets or sets the value
   final DateTimeField dateTime = DateTimeField("dateTime");
 
+  final IntegerField staticValue = IntegerField("static")
+      ..atRevision(2);
+
   @override
   Table getInstance() {
     return SampleTable();
@@ -25,7 +28,8 @@ class SampleTable extends Table {
     return [
       id,
       counterValue,
-      dateTime
+      dateTime,
+      staticValue
     ];
   }
 
@@ -38,6 +42,6 @@ class SampleTable extends Table {
   }
 
   @override
-  int get revision => 1;
+  int get revision => 2;
 
 }

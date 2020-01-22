@@ -31,7 +31,7 @@ class DateTimeField extends Field<DateTime> {
 
   @override
   String toSqlCompatibleValue() {
-    return DateFormat(sqlDateFormat).format(value);
+    return "'${DateFormat(sqlDateFormat).format(value)}'";
   }
 
   @override
