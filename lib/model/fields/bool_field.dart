@@ -1,5 +1,6 @@
 import 'package:flutter_pom/errors/field_constraint_error.dart';
 import 'package:flutter_pom/model/field.dart';
+import 'package:flutter_pom/model/sql_types.dart';
 
 class BoolField extends Field<bool> {
   BoolField(String name) : super(name);
@@ -16,7 +17,7 @@ class BoolField extends Field<bool> {
   }
 
   @override
-  String get sqlType => "INTEGER";
+  String get sqlType => SQLTypes.boolean;
 
   @override
   bool supportsAutoIncrement() {
@@ -24,14 +25,14 @@ class BoolField extends Field<bool> {
   }
 
   @override
-  String toSqlCompatibleValue() {
-    return (this.value ? "1" : "0");
-  }
-
-  @override
   bool get supportsPrimaryKey => false;
 
   @override
   bool get defaultValue => false;
+
+  @override
+  String toSql(bool f) {
+    return (f ? "1" : "0");
+  }
 
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_pom/flutter_pom.dart';
+import 'package:flutter_pom/model/sql_types.dart';
 
 class ObjectField<T extends Serializable> extends Field {
   ObjectField(String name) : super(name);
@@ -12,7 +13,7 @@ class ObjectField<T extends Serializable> extends Field {
   bool get supportsPrimaryKey => false;
 
   @override
-  String get sqlType => "TEXT";
+  String get sqlType => SQLTypes.text;
 
   @override
   void fromSqlCompatibleValue(value) {
@@ -23,8 +24,8 @@ class ObjectField<T extends Serializable> extends Field {
   }
 
   @override
-  String toSqlCompatibleValue() {
-    var retVal = value.toJson();
+  String toSql(v) {
+    var retVal = v.toJson();
     return "'$retVal'";
   }
 

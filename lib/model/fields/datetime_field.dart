@@ -1,5 +1,6 @@
 import 'package:flutter_pom/errors/field_constraint_error.dart';
 import 'package:flutter_pom/model/field.dart';
+import 'package:flutter_pom/model/sql_types.dart';
 import 'package:intl/intl.dart';
 
 class DateTimeField extends Field<DateTime> {
@@ -24,7 +25,7 @@ class DateTimeField extends Field<DateTime> {
 
   @override
   // TODO: implement sqlType
-  String get sqlType => "DATETIME";
+  String get sqlType => SQLTypes.dateTime;
 
   @override
   bool supportsAutoIncrement() {
@@ -32,16 +33,19 @@ class DateTimeField extends Field<DateTime> {
   }
 
   @override
-  String toSqlCompatibleValue() {
-    if (value == null) {
-      return "NULL";
-    } else return "'${DateFormat(sqlDateFormat).format(value)}'";
-  }
-
-  @override
   bool get supportsPrimaryKey => true;
 
   @override
   DateTime get defaultValue => DateTime.now();
+
+  @override
+  String toSql(v) {
+    if (v == null) {
+      return SQLTypes.nullValue;
+    }
+    else {
+      return SQLTypes.toSqlString(DateFormat(sqlDateFormat).format(v));
+    }
+  }
 
 }

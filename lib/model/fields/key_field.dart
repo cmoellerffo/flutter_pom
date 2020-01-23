@@ -1,4 +1,5 @@
 import 'package:flutter_pom/flutter_pom.dart';
+import 'package:flutter_pom/model/sql_types.dart';
 
 class KeyField<T extends Table> extends IntegerField {
   KeyField(String name, T binding) : super(name) {
@@ -13,7 +14,7 @@ class KeyField<T extends Table> extends IntegerField {
   }
 
   @override
-  String get sqlType => "INTEGER";
+  String get sqlType => SQLTypes.integer;
 
   @override
   Field primaryKey() {

@@ -1,3 +1,14 @@
+## [0.1.11] - 23.01.2020
+
+* Added NULL conversion fix for String Fields
+* SQL Creation is now more generic
+* Changed some underlying Field implementations
+* Added SQLHelper for generating Decision Trees
+
+## [0.1.10] - 23.01.2020
+
+* Added constraint to prevent infinite or negativeInfinite values on double fields.
+
 ## [0.1.9] - 23.01.2020
 
 * Fixed bug in context creation

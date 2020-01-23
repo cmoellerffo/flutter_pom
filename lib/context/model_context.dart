@@ -1,6 +1,7 @@
 import 'package:flutter_pom/events/event_queue.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/context/base_model_context.dart';
+import 'package:flutter_pom/model/sql_types.dart';
 
 class ModelContext<T extends Table> implements BaseModelContext<T> {
   Database _db;
@@ -11,25 +12,28 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   final EventQueue<T> eventQueue = EventQueue<T>();
 
+  T _model;
+  /// Gets or sets the Model
+  T get Model => _model;
+
   /// Creates a new model context instance
   ModelContext(Database db, T table) {
     _db = db;
     _table = table;
+    _model = _table.getInstance();
   }
 
   /// Returns items by range
-  Future<List<T>> getRange({String where = "", String orderBy = ""}) async {
+  Future<List<T>> getRange({String where, String orderBy}) async {
     var _list = List<T>();
-    var query = "SELECT * FROM ${_table.tableName}";
 
-    if (where.isNotEmpty) {
-      query += " WHERE($where)";
-    }
-    if (orderBy.isNotEmpty) {
-      query += " ORDER BY $orderBy";
-    }
+    var select = _table
+        .select(SQLKeywords.allSelector)
+        .where(where)
+        .orderBy([orderBy], SQLSortOrder.Ascending);
 
-    var returnData = await _db.dbHandle.rawQuery(query);
+    var returnData =
+        await _db.dbHandle.rawQuery(select);
 
     for (var item in returnData) {
       var modelItem = _table.getInstance();
@@ -44,7 +48,8 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     var temporaryEntity = _table.getInstance();
     temporaryEntity.idField.fromSqlCompatibleValue(id);
 
-    var list = await getRange(where: "${_table.idField.name} = ${temporaryEntity.idField.toSqlCompatibleValue()}");
+    var list = await getRange(
+        where: _table.idField.equalsField(temporaryEntity.idField));
     return list.first;
   }
 
@@ -54,12 +59,11 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
     if (updatedFields.length > 0) {
       var fieldValues = updatedFields
-          .map((f) => "${f.name} = ${f.toSqlCompatibleValue()}")
-          .join(",");
-      var statement =
-          "UPDATE ${obj.tableName} SET $fieldValues WHERE ${obj.idField.name} = ${obj.idField.toSqlCompatibleValue()}";
+          .map((f) => f.equalsField(f));
 
-      return await _db.dbHandle.execute(statement);
+      var query = obj.update(fieldValues).where(obj.idField.equalsField(obj.idField));
+
+      return await _db.dbHandle.execute(query);
     }
     return;
   }
@@ -73,14 +77,13 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   Future<void> put(T obj) async {
     var fieldNames = obj.fields
         .where((f) => !f.isAutoIncrement)
-        .map((f) => f.name)
-        .join(',');
+        .map((f) => f.name).toList();
+
     var fieldValues = obj.fields
         .where((f) => !f.isAutoIncrement)
-        .map((f) => f.toSqlCompatibleValue())
-        .join(',');
-    var statement =
-        "INSERT INTO ${obj.tableName} ($fieldNames) VALUES($fieldValues)";
+        .map((f) => f.toSqlCompatibleValue()).toList();
+
+    var statement = obj.insert(fieldNames, fieldValues);
 
     return await _db.dbHandle.execute(statement);
   }
@@ -102,14 +105,13 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   /// Deletes an item by id
   Future<void> deleteById(int id) async {
-    var statement =
-        "DELETE FROM ${_table.tableName} WHERE ${_table.idField.name} = $id";
+    var statement = _table.delete().where(_table.idField.equals(id.toString()));
     return await _db.dbHandle.execute(statement);
   }
 
   /// Deletes all data from the table
   Future<void> deleteAll() async {
-    return await _db.dbHandle.execute("DELETE FROM ${_table.tableName}");
+    return await _db.dbHandle.execute(_table.delete());
   }
 
   /** Non interface methods **/
@@ -129,19 +131,21 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   }
 
   static String buildCreateFieldStatement(Field f) {
-    var createStatement = "${f.name} ${f.sqlType}";
+    var builder = <String>[];
+    builder.add(f.name);
+    builder.add(f.sqlType);
 
     if (f.isPrimaryKey) {
-      createStatement += " PRIMARY KEY";
+      builder.add(SQLTypes.primaryKey);
     }
     if (f.isAutoIncrement) {
-      createStatement += " AUTOINCREMENT";
+      builder.add(SQLTypes.autoIncrement);
     }
     if (f.isNotNull) {
-      createStatement += " NOT NULL";
+      builder.add(SQLTypes.notNull);
     }
 
-    return createStatement;
+    return builder.join(SQLTypes.separator);
   }
 
   Future<bool> _exists(Table t) async {
@@ -149,6 +153,6 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   }
 
   void _drop() async {
-    await _db.dbHandle.execute("DROP TABLE IF EXISTS ${_table.tableName}");
+    await _db.dbHandle.execute(_table.drop());
   }
 }

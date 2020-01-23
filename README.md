@@ -112,7 +112,7 @@ void Do() async {
     await db.open();
     
     // Get the automatically created context of the table 'SampleTable'
-    var context = db.of<SampleTable>();
+    var context = await db.of<SampleTable>();
     
     // Create a new SampleTable item (think of it as a row)
     var sampleItem = SampleTable();
@@ -129,7 +129,7 @@ void Do() async {
     var items = await context.getRange();
     
     // Get all items with filter
-    var itemsFilter = await context.getRange(where: "str = 'String value'");
+    var itemsFilter = await context.getRange(where: context.Model.str.equals("String Value"));
     
     // Order the items 
     var itemsOrder = await context.getRange(orderBy: 'str DESC');

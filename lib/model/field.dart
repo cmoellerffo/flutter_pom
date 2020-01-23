@@ -89,8 +89,13 @@ abstract class Field<T> {
   }
 
   /* Abstract methods */
-  String toSqlCompatibleValue();
+  String toSqlCompatibleValue() {
+    return toSql(value);
+  }
+
   void fromSqlCompatibleValue(dynamic value);
+
+  String toSql(T value);
 
   /* Abstract getters */
   bool supportsAutoIncrement();

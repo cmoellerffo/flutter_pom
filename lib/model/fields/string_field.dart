@@ -1,4 +1,5 @@
 import 'package:flutter_pom/model/field.dart';
+import 'package:flutter_pom/model/sql_types.dart';
 
 class StringField extends Field<String> {
   StringField(String name) : super(name) {
@@ -13,8 +14,8 @@ class StringField extends Field<String> {
   }
 
   @override
-  String toSqlCompatibleValue() {
-    return "'$value'";
+  String toSql(v) {
+    return SQLTypes.toSqlString(v);
   }
 
   @override
@@ -23,12 +24,11 @@ class StringField extends Field<String> {
   }
 
   @override
-  String get sqlType => "TEXT";
+  String get sqlType => SQLTypes.text;
 
   @override
   bool get supportsPrimaryKey => true;
 
   @override
   String get defaultValue => "";
-
 }

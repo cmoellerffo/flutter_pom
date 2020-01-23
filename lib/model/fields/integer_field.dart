@@ -1,4 +1,5 @@
 import 'package:flutter_pom/model/field.dart';
+import 'package:flutter_pom/model/sql_types.dart';
 
 class IntegerField extends Field<int> {
   IntegerField(String name) : super(name);
@@ -9,8 +10,8 @@ class IntegerField extends Field<int> {
   }
 
   @override
-  String toSqlCompatibleValue() {
-    return value.toString();
+  String toSql(v) {
+    return v.toString();
   }
 
   @override
@@ -19,8 +20,7 @@ class IntegerField extends Field<int> {
   }
 
   @override
-  // TODO: implement sqlType
-  String get sqlType => "INTEGER";
+  String get sqlType => SQLTypes.integer;
 
   @override
   bool get supportsPrimaryKey => true;

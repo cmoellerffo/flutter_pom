@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter_pom/model/field.dart';
+import 'package:flutter_pom/model/sql_types.dart';
 
 class SecureStringField extends Field<String> {
   SecureStringField(String name) : super(name);
@@ -17,12 +18,12 @@ class SecureStringField extends Field<String> {
   }
 
   @override
-  String toSqlCompatibleValue() {
-    return "'$value'";
+  String toSql(v) {
+    return SQLTypes.toSqlString(v);
   }
 
   @override
-  String get sqlType => 'TEXT';
+  String get sqlType => SQLTypes.text;
 
   @override
   bool supportsAutoIncrement() {

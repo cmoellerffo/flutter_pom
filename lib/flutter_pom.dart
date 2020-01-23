@@ -24,3 +24,7 @@ export 'errors/multiple_primary_key_error.dart';
 export 'errors/table_configuration_error.dart';
 export 'errors/missing_field_error.dart';
 export 'errors/duplicate_field_error.dart';
+
+// Helpers
+
+export 'model/sql_types.dart';
