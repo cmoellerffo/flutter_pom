@@ -55,17 +55,26 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() async {
+    var c = await widget.db.of<SampleTable2>();
 
-    var context = await widget.db.of<SampleTable2>();
+    var sample4 = await c.select((q) {
+      return q
+          .where(c.fields.idField.gte(3))
+          .and(c.fields.idField.lte(20))
+          .orderByAsc([c.fields.idField])
+          .limit(40)
+          .offset(2);
+    });
 
-    var sample3 = await context.getRange(
-      where: context.Model.idField.equals(2)
-          .or(context.Model.idField.equals(3))
-          .or(context.Model.idField.equals(4))
+    sample4.forEach((s) {
+      print ("${s.id} ${s.dateTime}");
+    });
 
-    );
+    print(sample4.length);
 
-    print(sample3.length);
+    var sample5 = await c.count();
+
+    print(sample5);
 
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -74,12 +83,11 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
-
     });
   }
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
   }
 
@@ -135,4 +143,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-

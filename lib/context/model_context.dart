@@ -14,7 +14,7 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   T _model;
   /// Gets or sets the Model
-  T get Model => _model;
+  T get fields => _model;
 
   /// Creates a new model context instance
   ModelContext(Database db, T table) {
@@ -23,24 +23,37 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     _model = _table.getInstance();
   }
 
-  /// Returns items by range
-  Future<List<T>> getRange({String where, String orderBy}) async {
-    var _list = List<T>();
 
-    var select = _table
-        .select(SQLKeywords.allSelector)
-        .where(where)
-        .orderBy([orderBy], SQLSortOrder.Ascending);
+  @override
+  Future<int> count([QueryBuilder q]) async {
+    var select = _table.count();
 
-    var returnData =
-        await _db.dbHandle.rawQuery(select);
+    if (q != null) {
+      select += SQLTypes.separator + q("");
+    }
+
+    var returnData = await _db.dbHandle.rawQuery(select);
+
+    return returnData.first.values.first;
+  }
+
+  Future<List<T>> select([QueryBuilder q]) async {
+    var list = <T>[];
+
+    var select = _table.select(SQLKeywords.allSelector);
+
+    if (q != null) {
+      select += SQLTypes.separator + q("");
+    }
+
+    var returnData = await _db.dbHandle.rawQuery(select);
 
     for (var item in returnData) {
       var modelItem = _table.getInstance();
-      _list.add(Table.map(item, modelItem));
+      list.add(Table.map(item, modelItem));
     }
 
-    return _list;
+    return list;
   }
 
   /// Returns an item by id
@@ -48,8 +61,9 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     var temporaryEntity = _table.getInstance();
     temporaryEntity.idField.fromSqlCompatibleValue(id);
 
-    var list = await getRange(
-        where: _table.idField.equalsField(temporaryEntity.idField));
+    var list = await select((q) {
+        return q.where(_table.idField.equalsField(temporaryEntity.idField));
+    });
     return list.first;
   }
 
@@ -155,4 +169,6 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   void _drop() async {
     await _db.dbHandle.execute(_table.drop());
   }
+
+
 }

@@ -54,15 +54,25 @@ class SQLKeywords {
   static final String set = "SET";
   static final String delete = "DELETE";
   static final String values = "VALUES";
+  static final String count = "COUNT";
+  static final String limit = "LIMIT";
+  static final String offset = "OFFSET";
   static final String dropTable =
       "DROP${SQLTypes.separator}${SQLKeywords.table}${SQLTypes.separator}IF${SQLTypes.separator}NOT${SQLTypes.separator}EXISTS";
 }
 
 extension TableHelper on Table {
-  String select(String selector) {
+  String count() {
     var builder = <String>[];
     builder.addAll(
-        [SQLKeywords.select, selector, SQLKeywords.from, this.tableName]);
+        [SQLKeywords.select, SQLKeywords.count, SQLKeywords.allSelector.inBrackets(), SQLKeywords.from, this.tableName]);
+    return builder.join(SQLTypes.separator);
+  }
+
+  String select(String expression) {
+    var builder = <String>[];
+    builder.addAll(
+        [SQLKeywords.select, expression, SQLKeywords.from, this.tableName]);
     return builder.join(SQLTypes.separator);
   }
 
@@ -101,15 +111,15 @@ extension TableHelper on Table {
 }
 
 extension SQLHelper on String {
-  String where(String selector) {
+  String where(String expression) {
     var builder = <String>[this];
-    if (selector != null && selector.isNotEmpty) {
-      builder.addAll([SQLKeywords.where, selector]);
+    if (expression != null && expression.isNotEmpty) {
+      builder.addAll([SQLKeywords.where, expression]);
     }
     return builder.join(SQLTypes.separator);
   }
 
-  String orderBy(List<String> fields, SQLSortOrder order) {
+  String orderBy(List<Field> fields, SQLSortOrder order) {
     var builder = <String>[this];
     var sortOrder = (order == SQLSortOrder.Ascending)
         ? SQLKeywords.ascending
@@ -118,21 +128,41 @@ extension SQLHelper on String {
         fields.length != null &&
         fields.any((f) => f != null)) {
       builder.addAll(
-          [SQLKeywords.orderBy, fields.join(SQLTypes.comma), sortOrder]);
+          [SQLKeywords.orderBy, fields.map((f) => f.name).join(SQLTypes.comma), sortOrder]);
     }
     return builder.join(SQLTypes.separator);
+  }
+
+  String orderByAsc(List<Field> fields) {
+    return orderBy(fields, SQLSortOrder.Ascending);
+  }
+
+  String orderByDesc(List<Field> fields) {
+    return orderBy(fields, SQLSortOrder.Descending);
   }
 
   String inBrackets() {
     return SQLTypes.bracketOpen + this + SQLTypes.bracketClose;
   }
 
-  String or(String selector) {
-    return this + SQLTypes.separator + SQLKeywords.or + SQLTypes.separator + selector;
+  String group(String expression) {
+    return this + SQLTypes.separator + expression.inBrackets();
   }
 
-  String and(String selector) {
-    return this + SQLTypes.separator + SQLKeywords.and + SQLTypes.separator + selector;
+  String or(String expression) {
+    return this + SQLTypes.separator + SQLKeywords.or + SQLTypes.separator + expression;
+  }
+
+  String and(String expression) {
+    return this + SQLTypes.separator + SQLKeywords.and + SQLTypes.separator + expression;
+  }
+
+  String limit(int maxValues) {
+    return this + SQLTypes.separator + SQLKeywords.limit + SQLTypes.separator + maxValues.toString();
+  }
+
+  String offset(int start) {
+    return this + SQLTypes.separator + SQLKeywords.offset + SQLTypes.separator + start.toString();
   }
 }
 
@@ -168,6 +198,10 @@ extension FieldHelper on Field {
     return builder.join(SQLTypes.separator);
   }
 
+  String compareField(Field field, SQLComparators comparator) {
+    return this.compare(field.toSqlCompatibleValue(), comparator);
+  }
+
   String equals(dynamic value) {
     return compare(value, SQLComparators.Equals);
   }
@@ -180,8 +214,24 @@ extension FieldHelper on Field {
     return compare(value, SQLComparators.NotEquals);
   }
 
-  String notEqualsField(Field value) {
-    return compare(value.toSqlCompatibleValue(), SQLComparators.NotEquals);
+  String notEqualsField(Field field) {
+    return compare(field.toSqlCompatibleValue(), SQLComparators.NotEquals);
+  }
+
+  String gt(dynamic value) {
+    return compare(value, SQLComparators.Greater);
+  }
+
+  String gte(dynamic value) {
+    return compare(value, SQLComparators.GreaterOrEqual);
+  }
+
+  String lt(dynamic value) {
+    return compare(value, SQLComparators.Lower);
+  }
+
+  String lte(dynamic value) {
+    return compare(value, SQLComparators.LowerOrEqual);
   }
 }
 

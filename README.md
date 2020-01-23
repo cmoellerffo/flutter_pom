@@ -123,17 +123,19 @@ void Do() async {
     // Put the item into the database
     await context.put(sampleItem);
     
-    // Get all items from the table
-    // If you do not provide any arguments to 'getRange()' it will return
-    // all items from the selected table context
-    var items = await context.getRange();
+    // Get all items 
+    var itemsFilter = await context.select();
     
-    // Get all items with filter
-    var itemsFilter = await context.getRange(where: context.Model.str.equals("String Value"));
-    
-    // Order the items 
-    var itemsOrder = await context.getRange(orderBy: 'str DESC');
-    
+    // A complex filter scenario with comparison of field values and ordering
+    // We also support limiting and offsets
+    var itemsFilter2 = await c.select((q) {
+          return q
+                 .where(c.fields.idField.gte(3))
+                 .and(c.fields.idField.lte(20))
+                 .orderByAsc([c.fields.idField])
+                 .limit(40)
+                 .offset(2);
+        });    
     // Delete the item
     await context.delete(sampleItem);
     

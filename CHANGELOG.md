@@ -1,3 +1,7 @@
+## [0.1.12] - 23.01.2020
+
+* Removed getRange for 'select()' and 'count()' methods that use QueryBuilder as arguments
+
 ## [0.1.11] - 23.01.2020
 
 * Added NULL conversion fix for String Fields

@@ -102,5 +102,10 @@ abstract class Field<T> {
   bool get supportsPrimaryKey;
   String get sqlType;
 
+  @override
+  String toString() {
+    return toSql(value);
+  }
+
   T get defaultValue;
 }
