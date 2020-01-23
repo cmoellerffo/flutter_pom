@@ -1,3 +1,8 @@
+## [0.1.9] - 23.01.2020
+
+* Fixed bug in context creation
+* Fixed bug with nullable Datetime objects
+
 ## [0.1.8] - 22.01.2020
 
 * Changed method parameter signature of get() to use 'dynamic' instead of fields

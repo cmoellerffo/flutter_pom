@@ -2,6 +2,7 @@ import 'package:flutter_pom/context/base_model_context.dart';
 import 'package:flutter_pom/context/migration_context.dart';
 import 'package:flutter_pom/context/model_context.dart';
 import 'package:flutter_pom/errors/table_configuration_error.dart';
+import 'package:flutter_pom/events/event_queue.dart';
 import 'package:flutter_pom/model/migration_info.dart';
 import 'package:flutter_pom/model/table.dart';
 import 'package:sqflite/sqflite.dart' as b;
@@ -33,6 +34,7 @@ abstract class Database {
     }
   }
 
+  /*
   Future<void> _doMigrations() async {
     _migrationContext = ModelContext<$MigrationInfo>(this, _migrationInfo);
     _migrationContext.create();
@@ -74,6 +76,7 @@ abstract class Database {
       }
     });
   }
+  */
 
   Future<void> _initializeDatabase() async {
     _tables = initializeDatabase();
@@ -89,16 +92,22 @@ abstract class Database {
   Map<Type, Table> initializeDatabase();
 
   /// Returns the table for the requested model type
-  BaseModelContext<T> of<T extends Table>() {
+  Future<BaseModelContext<T>> of<T extends Table>() async {
     if (_modelTables.containsKey(T)) {
       return (_modelTables[T] as BaseModelContext<T>);
     }
 
     var context = ModelContext<T>(this, _tables[T]);
-    context.create(false);
+    await context.create(false);
     _modelTables[T] = context;
 
     return context;
+  }
+
+  EventQueue<T> observerOf<T extends Table>() {
+    if (_modelTables.containsKey(T)) {
+      return (_modelTables[T] as ModelContext<T>).eventQueue;
+    }
   }
 
   /// opens the database connection

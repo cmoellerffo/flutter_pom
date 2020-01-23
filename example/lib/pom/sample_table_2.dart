@@ -3,8 +3,8 @@ import 'package:flutter_pom/model/fields/id_field.dart';
 import 'package:flutter_pom/model/fields/integer_field.dart';
 import 'package:flutter_pom/model/fields/datetime_field.dart';
 
-class SampleTable extends Table {
-  SampleTable() : super("sample_table");
+class SampleTable2 extends Table {
+  SampleTable2() : super("sample_table2");
 
   /// Gets or sets the id
   final IdField id = IdField("id").autoIncrement();
@@ -15,9 +15,12 @@ class SampleTable extends Table {
   /// Gets or sets the value
   final DateTimeField dateTime = DateTimeField("dateTime");
 
+  final IntegerField staticValue = IntegerField("static")
+    ..atRevision(2);
+
   @override
   Table getInstance() {
-    return SampleTable();
+    return SampleTable2();
   }
 
   @override
@@ -25,13 +28,14 @@ class SampleTable extends Table {
     return [
       id,
       counterValue,
-      dateTime
+      dateTime,
+      staticValue
     ];
   }
 
   /// This is just a helper for creating this thing externally
-  static SampleTable build(int counterValue, DateTime dateTime) {
-    var item = SampleTable();
+  static SampleTable2 build(int counterValue, DateTime dateTime) {
+    var item = SampleTable2();
     item.counterValue.value = counterValue;
     item.dateTime.value = dateTime;
     return item;

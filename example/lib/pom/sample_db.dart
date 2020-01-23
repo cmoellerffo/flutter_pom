@@ -1,4 +1,5 @@
 import 'package:example/pom/sample_table.dart';
+import 'package:example/pom/sample_table_2.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 
 class SampleDb extends Database {
@@ -8,7 +9,8 @@ class SampleDb extends Database {
   Map<Type, Table> initializeDatabase() {
 
     return <Type, Table> {
-      SampleTable: SampleTable()
+      SampleTable: SampleTable(),
+      SampleTable2: SampleTable2()
     };
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter_pom/events/event_queue.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/context/base_model_context.dart';
 
@@ -7,6 +8,8 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   T get baseTable => _table;
   Database get handle => _db;
+
+  final EventQueue<T> eventQueue = EventQueue<T>();
 
   /// Creates a new model context instance
   ModelContext(Database db, T table) {

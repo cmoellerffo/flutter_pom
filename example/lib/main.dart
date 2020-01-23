@@ -1,3 +1,4 @@
+import 'package:example/pom/sample_table_2.dart';
 import 'package:flutter/material.dart';
 
 import 'pom/sample_db.dart';
@@ -55,10 +56,18 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() async {
 
     var sample = SampleTable.build(_counter, DateTime.now());
-    await widget.db.of<SampleTable>().put(sample);
+    var sample2 = SampleTable2.build(_counter, null);
 
-    var samples = await widget.db.of<SampleTable>().getRange();
+    await (await widget.db.of<SampleTable>()).put(sample);
+    await (await widget.db.of<SampleTable2>()).put(sample2);
+
+    var samples = await (await widget.db.of<SampleTable>()).getRange();
     samples.forEach((e) {
+      print ("${e.id.value} ${e.counterValue.value} ${e.dateTime.value}");
+    });
+
+    var samples2 = await (await widget.db.of<SampleTable2>()).getRange();
+    samples2.forEach((e) {
       print ("${e.id.value} ${e.counterValue.value} ${e.dateTime.value}");
     });
 

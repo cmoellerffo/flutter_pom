@@ -9,7 +9,9 @@ class DateTimeField extends Field<DateTime> {
 
   @override
   void fromSqlCompatibleValue(dynamic value) {
-    if (value is String) {
+    if (value == null) {
+      this.value = null;
+    } else if (value is String) {
       this.value = DateFormat(sqlDateFormat).parse(value.toString());
     } else if (value is DateTime) {
       this.value = value;
@@ -31,7 +33,9 @@ class DateTimeField extends Field<DateTime> {
 
   @override
   String toSqlCompatibleValue() {
-    return "'${DateFormat(sqlDateFormat).format(value)}'";
+    if (value == null) {
+      return "NULL";
+    } else return "'${DateFormat(sqlDateFormat).format(value)}'";
   }
 
   @override
