@@ -1,5 +1,7 @@
 library flutter_pom;
 
+import 'package:flutter/cupertino.dart';
+
 export 'model/table.dart';
 export 'model/field.dart';
 export 'model/database.dart';
@@ -28,3 +30,8 @@ export 'errors/duplicate_field_error.dart';
 // Helpers
 
 export 'model/sql_types.dart';
+
+// Query Builder
+
+export 'builder/query_select_builder.dart';
+export 'builder/selectors/sql_condition.dart';

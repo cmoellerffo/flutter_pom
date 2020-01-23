@@ -59,15 +59,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var sample4 = await c.select((q) {
       return q
-          .where(c.fields.idField.gte(3))
-          .and(c.fields.idField.lte(20))
+          .where(c.fields.idField.gte(3)
+              .and(c.fields.idField.lte(20))
+              .and(c.fields.idField.notEquals(14)))
           .orderByAsc([c.fields.idField])
           .limit(40)
           .offset(2);
     });
 
     sample4.forEach((s) {
-      print ("${s.id} ${s.dateTime}");
+      print("${s.id} ${s.dateTime}");
     });
 
     print(sample4.length);

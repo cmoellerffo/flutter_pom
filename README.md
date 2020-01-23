@@ -136,6 +136,17 @@ void Do() async {
                  .limit(40)
                  .offset(2);
         });    
+    
+    // Count all items
+    var count1 = await c.count();
+    
+    // Count all items where id >= 3 and id <= 20
+    var count2 = await c.count((q) {
+           return q
+                  .where(c.fields.idField.gte(3))
+                  .and(c.fields.idField.lte(20));
+        });
+    
     // Delete the item
     await context.delete(sampleItem);
     

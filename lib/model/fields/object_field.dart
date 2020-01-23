@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/model/sql_types.dart';
 

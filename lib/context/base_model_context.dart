@@ -1,6 +1,8 @@
+import 'package:flutter_pom/builder/query_count_builder.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 
-typedef String QueryBuilder(String baseQuery);
+typedef QuerySelectBuilder SelectBuilder(QuerySelectBuilder builder);
+typedef QueryCountBuilder CountBuilder(QueryCountBuilder builder);
 
 /// Abstract class
 abstract class BaseModelContext<T extends Table> {
@@ -17,6 +19,6 @@ abstract class BaseModelContext<T extends Table> {
   Future<void> deleteById(int id);
   Future<void> deleteAll();
 
-  Future<List<T>> select([QueryBuilder callback]);
-  Future<int> count([QueryBuilder callback]);
+  Future<List<T>> select([SelectBuilder callback]);
+  Future<int> count([CountBuilder callback]);
 }

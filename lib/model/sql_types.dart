@@ -1,4 +1,3 @@
-import 'package:flutter_pom/model/field.dart';
 import 'package:flutter_pom/model/table.dart';
 
 
@@ -62,37 +61,6 @@ class SQLKeywords {
 }
 
 extension TableHelper on Table {
-  String count() {
-    var builder = <String>[];
-    builder.addAll(
-        [SQLKeywords.select, SQLKeywords.count, SQLKeywords.allSelector.inBrackets(), SQLKeywords.from, this.tableName]);
-    return builder.join(SQLTypes.separator);
-  }
-
-  String select(String expression) {
-    var builder = <String>[];
-    builder.addAll(
-        [SQLKeywords.select, expression, SQLKeywords.from, this.tableName]);
-    return builder.join(SQLTypes.separator);
-  }
-
-  String update(List<String> setter) {
-    var builder = <String>[];
-    builder.addAll([
-      SQLKeywords.update,
-      this.tableName,
-      SQLKeywords.set,
-      setter.join(SQLTypes.comma)
-    ]);
-    return builder.join(SQLTypes.separator);
-  }
-
-  String delete() {
-    var builder = <String>[];
-    builder.addAll([SQLKeywords.delete, SQLKeywords.from, this.tableName]);
-    return builder.join(SQLTypes.separator);
-  }
-
   String insert(List<String> fields, List<String> values) {
     var builder = <String>[];
     builder.addAll([
@@ -111,129 +79,11 @@ extension TableHelper on Table {
 }
 
 extension SQLHelper on String {
-  String where(String expression) {
-    var builder = <String>[this];
-    if (expression != null && expression.isNotEmpty) {
-      builder.addAll([SQLKeywords.where, expression]);
-    }
-    return builder.join(SQLTypes.separator);
-  }
-
-  String orderBy(List<Field> fields, SQLSortOrder order) {
-    var builder = <String>[this];
-    var sortOrder = (order == SQLSortOrder.Ascending)
-        ? SQLKeywords.ascending
-        : SQLKeywords.descending;
-    if (fields != null &&
-        fields.length != null &&
-        fields.any((f) => f != null)) {
-      builder.addAll(
-          [SQLKeywords.orderBy, fields.map((f) => f.name).join(SQLTypes.comma), sortOrder]);
-    }
-    return builder.join(SQLTypes.separator);
-  }
-
-  String orderByAsc(List<Field> fields) {
-    return orderBy(fields, SQLSortOrder.Ascending);
-  }
-
-  String orderByDesc(List<Field> fields) {
-    return orderBy(fields, SQLSortOrder.Descending);
-  }
-
   String inBrackets() {
     return SQLTypes.bracketOpen + this + SQLTypes.bracketClose;
   }
-
-  String group(String expression) {
-    return this + SQLTypes.separator + expression.inBrackets();
-  }
-
-  String or(String expression) {
-    return this + SQLTypes.separator + SQLKeywords.or + SQLTypes.separator + expression;
-  }
-
-  String and(String expression) {
-    return this + SQLTypes.separator + SQLKeywords.and + SQLTypes.separator + expression;
-  }
-
-  String limit(int maxValues) {
-    return this + SQLTypes.separator + SQLKeywords.limit + SQLTypes.separator + maxValues.toString();
-  }
-
-  String offset(int start) {
-    return this + SQLTypes.separator + SQLKeywords.offset + SQLTypes.separator + start.toString();
-  }
 }
 
-extension FieldHelper on Field {
-  String compare(dynamic value, SQLComparators comparator) {
-    String comparatorValue;
-
-    switch (comparator) {
-      case SQLComparators.Equals:
-        comparatorValue = SQLTypes.eq;
-        break;
-      case SQLComparators.Greater:
-        comparatorValue = SQLTypes.gt;
-        break;
-      case SQLComparators.Lower:
-        comparatorValue = SQLTypes.lt;
-        break;
-      case SQLComparators.GreaterOrEqual:
-        comparatorValue = SQLTypes.gt + SQLTypes.eq;
-        break;
-      case SQLComparators.LowerOrEqual:
-        comparatorValue = SQLTypes.lt + SQLTypes.eq;
-        break;
-      case SQLComparators.Like:
-        comparatorValue = SQLTypes.like;
-        break;
-      case SQLComparators.NotEquals:
-        comparatorValue = SQLTypes.not + SQLTypes.eq;
-    }
-
-    var builder = <String>[];
-    builder.addAll([this.name, comparatorValue, this.toSql(value)]);
-    return builder.join(SQLTypes.separator);
-  }
-
-  String compareField(Field field, SQLComparators comparator) {
-    return this.compare(field.toSqlCompatibleValue(), comparator);
-  }
-
-  String equals(dynamic value) {
-    return compare(value, SQLComparators.Equals);
-  }
-
-  String equalsField(Field value) {
-    return compare(value.toSqlCompatibleValue(), SQLComparators.Equals);
-  }
-
-  String notEquals(dynamic value) {
-    return compare(value, SQLComparators.NotEquals);
-  }
-
-  String notEqualsField(Field field) {
-    return compare(field.toSqlCompatibleValue(), SQLComparators.NotEquals);
-  }
-
-  String gt(dynamic value) {
-    return compare(value, SQLComparators.Greater);
-  }
-
-  String gte(dynamic value) {
-    return compare(value, SQLComparators.GreaterOrEqual);
-  }
-
-  String lt(dynamic value) {
-    return compare(value, SQLComparators.Lower);
-  }
-
-  String lte(dynamic value) {
-    return compare(value, SQLComparators.LowerOrEqual);
-  }
-}
 
 enum SQLSortOrder { Ascending, Descending }
 

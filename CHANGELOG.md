@@ -1,3 +1,8 @@
+## [0.1.13] - 23.01.2020
+
+* Removed unused dart:convert import
+* Adapted Sample to meet current API
+
 ## [0.1.12] - 23.01.2020
 
 * Removed getRange for 'select()' and 'count()' methods that use QueryBuilder as arguments
