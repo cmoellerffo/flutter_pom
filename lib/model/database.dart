@@ -1,8 +1,5 @@
 import 'package:flutter_pom/context/base_model_context.dart';
-import 'package:flutter_pom/context/migration_context.dart';
 import 'package:flutter_pom/context/model_context.dart';
-import 'package:flutter_pom/errors/table_configuration_error.dart';
-import 'package:flutter_pom/events/event_queue.dart';
 import 'package:flutter_pom/model/migration_info.dart';
 import 'package:flutter_pom/model/table.dart';
 import 'package:sqflite/sqflite.dart' as b;
@@ -11,14 +8,16 @@ abstract class Database {
   Map<Type, Table> _tables;
   Map<Type, ModelContext> _modelTables = <Type, ModelContext>{};
 
-  ModelContext<$MigrationInfo> _migrationContext;
-  final $MigrationInfo _migrationInfo = $MigrationInfo();
+  //ModelContext<$MigrationInfo> _migrationContext;
+  //final $MigrationInfo _migrationInfo = $MigrationInfo();
 
   String _name;
+
   /// Gets the database name
   String get dbName => _name;
 
   b.Database _db;
+
   /// Returns the database handle
   b.Database get dbHandle => _db;
 
@@ -102,12 +101,6 @@ abstract class Database {
     _modelTables[T] = context;
 
     return context;
-  }
-
-  EventQueue<T> observerOf<T extends Table>() {
-    if (_modelTables.containsKey(T)) {
-      return (_modelTables[T] as ModelContext<T>).eventQueue;
-    }
   }
 
   /// opens the database connection

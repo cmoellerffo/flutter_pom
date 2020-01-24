@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_pom/builder/delete_builder.dart';
 import 'package:flutter_pom/builder/query_count_builder.dart';
 import 'package:flutter_pom/builder/update_builder.dart';
-import 'package:flutter_pom/events/event_queue.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/context/base_model_context.dart';
 import 'package:flutter_pom/model/sql_types.dart';
@@ -11,11 +12,27 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   T _table;
 
   T get baseTable => _table;
+
+  /// Gets the underlying database handle
   Database get handle => _db;
 
-  final EventQueue<T> eventQueue = EventQueue<T>();
+  final StreamController<T> _addController = StreamController<T>.broadcast();
+
+  /// Gets the stream for added items
+  Stream<T> get onCreate => _addController.stream;
+
+  final StreamController<T> _updateController = StreamController<T>.broadcast();
+
+  /// Gets the stream for updated items
+  Stream<T> get onUpdate => _updateController.stream;
+
+  final StreamController _deleteController = StreamController.broadcast();
+
+  /// Gets the stream for deleted items
+  Stream<T> get onDelete => _deleteController.stream;
 
   T _model;
+
   /// Gets or sets the Model
   T get fields => _model;
 
@@ -25,7 +42,6 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     _table = table;
     _model = _table.getInstance();
   }
-
 
   @override
   Future<int> count([CountBuilder q]) async {
@@ -63,7 +79,7 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     var data = await this.select();
     var outData = List<T>();
 
-    for(var item in data) {
+    for (var item in data) {
       if (test(item)) {
         outData.add(item);
       }
@@ -77,7 +93,7 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     temporaryEntity.idField.fromSqlCompatibleValue(id);
 
     var list = await select((q) {
-        return q.where(_table.idField.equals(temporaryEntity.idField.value));
+      return q.where(_table.idField.equals(temporaryEntity.idField.value));
     });
     return list.first;
   }
@@ -87,13 +103,16 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     var updatedFields = obj.fields.where((f) => f.dirty && !f.isAutoIncrement);
 
     if (updatedFields.length > 0) {
-      var fieldValues = updatedFields
-          .map((f) => f.equals(f.value));
+      var fieldValues = updatedFields.map((f) => f.equals(f.value));
 
       var updateBuilder = UpdateBuilder(_table, fieldValues)
-                          .where(obj.idField.equals(obj.idField.value));
+          .where(obj.idField.equals(obj.idField.value));
 
-      return await _db.dbHandle.execute(updateBuilder.toSql());
+      await _db.dbHandle.execute(updateBuilder.toSql());
+
+      _updateController.add(obj);
+
+      return;
     }
     return;
   }
@@ -105,17 +124,21 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   /// Puts an item
   Future<void> put(T obj) async {
-    var fieldNames = obj.fields
-        .where((f) => !f.isAutoIncrement)
-        .map((f) => f.name).toList();
+    var fieldNames =
+        obj.fields.where((f) => !f.isAutoIncrement).map((f) => f.name).toList();
 
     var fieldValues = obj.fields
         .where((f) => !f.isAutoIncrement)
-        .map((f) => f.toSqlCompatibleValue()).toList();
+        .map((f) => f.toSqlCompatibleValue())
+        .toList();
 
     var statement = obj.insert(fieldNames, fieldValues);
 
-    return await _db.dbHandle.execute(statement);
+    await _db.dbHandle.execute(statement);
+
+    _addController.add(obj);
+
+    return;
   }
 
   /// Puts all items
@@ -135,14 +158,18 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   /// Deletes an item by id
   Future<void> deleteById(int id) async {
-    var deleteBuilder = DeleteBuilder(_table).
-                                where(_table.idField.equals(id.toString()));
-    return await _db.dbHandle.execute(deleteBuilder.toSql());
+    var deleteBuilder =
+        DeleteBuilder(_table).where(_table.idField.equals(id.toString()));
+    await _db.dbHandle.execute(deleteBuilder.toSql());
+    _deleteController.add(id);
+    return;
   }
 
   /// Deletes all data from the table
   Future<void> deleteAll() async {
-    return await _db.dbHandle.execute(DeleteBuilder(_table).toSql());
+    await _db.dbHandle.execute(DeleteBuilder(_table).toSql());
+    _deleteController.add("all");
+    return;
   }
 
   /** Non interface methods **/
@@ -186,6 +213,4 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   void _drop() async {
     await _db.dbHandle.execute(_table.drop());
   }
-
-
 }

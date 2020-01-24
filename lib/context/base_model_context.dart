@@ -23,4 +23,8 @@ abstract class BaseModelContext<T extends Table> {
 
   Future<List<T>> select([SelectBuilder callback]);
   Future<int> count([CountBuilder callback]);
+
+  Stream<T> get onUpdate;
+  Stream<T> get onDelete;
+  Stream<T> get onCreate;
 }

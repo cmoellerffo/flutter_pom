@@ -165,5 +165,10 @@ void Do() async {
     
     // Update the item. Only changed values will be updated.
     await context.update(sampleItem);
+    
+    // Register for the onCreate Stream that gets fired everytime somebody adds an item
+    context.onCreate.listen((sampleItem) {
+      // do something with the item
+    });
 }
 ```

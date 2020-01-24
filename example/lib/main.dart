@@ -55,32 +55,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() async {
     var c = await widget.db.of<SampleTable2>();
-
-    var sample4 = await c.select((q) {
-      return q
-          .where(q.fields.idField.gte(3)
-              .and(q.fields.idField.lte(20))
-              .and(q.fields.idField.notEquals(14)))
-          .orderByAsc([q.fields.idField])
-          .limit(40)
-          .offset(2);
-    });
-
-
-    sample4.forEach((s) {
-      print("${s.id} ${s.dateTime}");
-    });
-
-    print(sample4.length);
-
-    var sample5 = await c.count();
-
-    print(sample5);
-
-    var sample6 = await c.where((t) => t.idField.value >= 3 && t.idField.value <= 20 && t.idField.value != 14);
-    sample6.forEach((s) {
+    c.onCreate.listen((s) {
       print("${s.id} ${s.dateTime} ${s.counterValue}");
     });
+
+    var item = SampleTable2();
+    item.counterValue.value = _counter + 1;
+    item.dateTime.value = DateTime.now();
+
+    await c.put(item);
 
     setState(() {
       // This call to setState tells the Flutter framework that something has

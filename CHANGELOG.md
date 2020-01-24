@@ -1,16 +1,24 @@
-## [0.1.15] . 23.01.2020
+## [0.1.16] - 24.01.2020
+
+* Added Streams for 'onCreate', 'onDelete' and 'onUpdate'
+
+## [0.1.15+1] - 23.01.2020
+
+* Removed unnecessary dependencies in pubspec.
+
+## [0.1.15] - 23.01.2020
 
 * Introduced 'where' method to do dart-side filtering of cached data
 
-## [0.1.14+2] . 23.01.2020
+## [0.1.14+2] - 23.01.2020
 
 * You can now access the fields inside QueryBuilder by '.fields' Property
 
-## [0.1.14+1] . 23.01.2020
+## [0.1.14+1] - 23.01.2020
 
 * Extended Exports for fields 
 
-## [0.1.14] . 23.01.2020
+## [0.1.14] - 23.01.2020
 
 * Added QueryBuilder Framework to make query building more reliable
 
