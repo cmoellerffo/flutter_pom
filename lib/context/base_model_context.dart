@@ -19,6 +19,8 @@ abstract class BaseModelContext<T extends Table> {
   Future<void> deleteById(int id);
   Future<void> deleteAll();
 
+  Future<Iterable<T>> where(bool test(T element));
+
   Future<List<T>> select([SelectBuilder callback]);
   Future<int> count([CountBuilder callback]);
 }

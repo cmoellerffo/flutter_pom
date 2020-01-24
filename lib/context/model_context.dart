@@ -59,6 +59,18 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     return list;
   }
 
+  Future<Iterable<T>> where(bool test(T element)) async {
+    var data = await this.select();
+    var outData = List<T>();
+
+    for(var item in data) {
+      if (test(item)) {
+        outData.add(item);
+      }
+    }
+    return outData;
+  }
+
   /// Returns an item by id
   Future<T> get(dynamic id) async {
     var temporaryEntity = _table.getInstance();

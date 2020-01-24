@@ -137,6 +137,19 @@ void Do() async {
                  .offset(2);
         });    
     
+    // NOTICE: There is an alternative way of querying data using Dart included test methods.
+    // The downside of this approach is that all data will be queried and cached before the
+    // filtering begins. 
+    // For datasets > 1k items you should use the 'select' method to do filtering on db level
+    // instead.
+    //
+    // The following query filters the exact same data like 'itemsFilter2' without ordering 
+    // and limiting. This can later be done with dart language 
+    
+    var itemsFilter3 = await c.where((i) => 
+                                i.idField.value >= 3 &&
+                                i.idField.value <= 20);
+    
     // Count all items
     var count1 = await c.count();
     

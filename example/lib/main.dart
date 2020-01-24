@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 
 import 'pom/sample_db.dart';
-import 'pom/sample_table.dart';
 
 void main() => runApp(MyApp());
 
@@ -59,13 +58,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var sample4 = await c.select((q) {
       return q
-          .where(c.fields.idField.gte(3)
-              .and(c.fields.idField.lte(20))
-              .and(c.fields.idField.notEquals(14)))
-          .orderByAsc([c.fields.idField])
+          .where(q.fields.idField.gte(3)
+              .and(q.fields.idField.lte(20))
+              .and(q.fields.idField.notEquals(14)))
+          .orderByAsc([q.fields.idField])
           .limit(40)
           .offset(2);
     });
+
 
     sample4.forEach((s) {
       print("${s.id} ${s.dateTime}");
@@ -76,6 +76,11 @@ class _MyHomePageState extends State<MyHomePage> {
     var sample5 = await c.count();
 
     print(sample5);
+
+    var sample6 = await c.where((t) => t.idField.value >= 3 && t.idField.value <= 20 && t.idField.value != 14);
+    sample6.forEach((s) {
+      print("${s.id} ${s.dateTime} ${s.counterValue}");
+    });
 
     setState(() {
       // This call to setState tells the Flutter framework that something has

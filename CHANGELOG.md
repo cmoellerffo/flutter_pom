@@ -1,3 +1,19 @@
+## [0.1.15] . 23.01.2020
+
+* Introduced 'where' method to do dart-side filtering of cached data
+
+## [0.1.14+2] . 23.01.2020
+
+* You can now access the fields inside QueryBuilder by '.fields' Property
+
+## [0.1.14+1] . 23.01.2020
+
+* Extended Exports for fields 
+
+## [0.1.14] . 23.01.2020
+
+* Added QueryBuilder Framework to make query building more reliable
+
 ## [0.1.13] - 23.01.2020
 
 * Removed unused dart:convert import

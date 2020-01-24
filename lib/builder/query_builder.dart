@@ -26,35 +26,14 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import 'package:flutter_pom/builder/query_builder.dart';
-import 'package:flutter_pom/builder/selectors/sql_condition.dart';
-import 'package:flutter_pom/builder/selectors/sql_where_selector.dart';
-import 'package:flutter_pom/model/sql_types.dart';
-import 'package:flutter_pom/model/table.dart';
+import 'package:flutter_pom/flutter_pom.dart';
 
-class QueryCountBuilder extends QueryBuilder {
+/// QueryBuilder abstract Class.
+abstract class QueryBuilder {
+  Table table;
+  Table fields;
 
-  SQLWhereSelector _whereSelector;
-
-  QueryCountBuilder(Table table) : super(table);
-
-  QueryCountBuilder where(SQLCondition condition) {
-    if (_whereSelector != null) throw UnsupportedError("There is already a 'where' clause defined");
-
-    _whereSelector = SQLWhereSelector(condition);
-    return this;
-  }
-
-
-  String toSql() {
-    var builder = <String>[];
-    builder.addAll(
-        [SQLKeywords.select, SQLKeywords.count, SQLKeywords.allSelector.inBrackets(), SQLKeywords.from, table.tableName]);
-
-    if (_whereSelector != null) {
-      builder.add(_whereSelector.toSql());
-    }
-
-    return builder.join(SQLTypes.separator);
+  QueryBuilder(this.table) {
+    fields = table.getInstance();
   }
 }
