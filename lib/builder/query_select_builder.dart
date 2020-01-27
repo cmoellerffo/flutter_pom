@@ -36,7 +36,6 @@ import 'package:flutter_pom/model/table.dart';
 /// QuerySelectBuilder provides access to all necessary query methods
 /// like 'where', 'orderBy', 'limit'
 class QuerySelectBuilder extends QueryBuilder {
-
   SQLWhereSelector _whereSelector;
   List<Field> _orderBy;
   SQLSortOrder _sortOrder;
@@ -46,14 +45,16 @@ class QuerySelectBuilder extends QueryBuilder {
   QuerySelectBuilder(Table table) : super(table);
 
   QuerySelectBuilder where(SQLCondition condition) {
-    if (_whereSelector != null) throw UnsupportedError("There is already a 'where' clause defined");
+    if (_whereSelector != null)
+      throw UnsupportedError("There is already a 'where' clause defined");
 
     _whereSelector = SQLWhereSelector(condition);
     return this;
   }
 
   QuerySelectBuilder orderBy(SQLSortOrder order, List<Field> field) {
-    if (_orderBy != null) throw UnsupportedError("There is already a 'orderBy' clause defined");
+    if (_orderBy != null)
+      throw UnsupportedError("There is already a 'orderBy' clause defined");
     _orderBy = field;
     _sortOrder = order;
     return this;
@@ -70,22 +71,27 @@ class QuerySelectBuilder extends QueryBuilder {
   }
 
   QuerySelectBuilder limit(int max) {
-    if (_limit != null) throw UnsupportedError("There is already a 'limit' clause defined");
+    if (_limit != null)
+      throw UnsupportedError("There is already a 'limit' clause defined");
     _limit = max;
     return this;
   }
 
-
   QuerySelectBuilder offset(int start) {
-    if (_offset != null) throw UnsupportedError("There is already a 'offsert' clause defined");
+    if (_offset != null)
+      throw UnsupportedError("There is already a 'offsert' clause defined");
     _offset = start;
     return this;
   }
 
   String toSql() {
     var builder = <String>[];
-    builder.addAll(
-        [SQLKeywords.select, SQLKeywords.allSelector, SQLKeywords.from, table.tableName]);
+    builder.addAll([
+      SQLKeywords.select,
+      SQLKeywords.allSelector,
+      SQLKeywords.from,
+      table.tableName
+    ]);
 
     if (_whereSelector != null) {
       builder.add(_whereSelector.toSql());
@@ -98,8 +104,11 @@ class QuerySelectBuilder extends QueryBuilder {
       if (_orderBy != null &&
           _orderBy.length != null &&
           _orderBy.any((f) => f != null)) {
-        builder.addAll(
-            [SQLKeywords.orderBy, _orderBy.map((f) => f.name).join(SQLTypes.comma), sortOrder]);
+        builder.addAll([
+          SQLKeywords.orderBy,
+          _orderBy.map((f) => f.name).join(SQLTypes.comma),
+          sortOrder
+        ]);
       }
     }
 
@@ -113,5 +122,4 @@ class QuerySelectBuilder extends QueryBuilder {
 
     return builder.join(SQLTypes.separator);
   }
-
 }

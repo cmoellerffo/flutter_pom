@@ -36,5 +36,4 @@ class KeyField<T extends Table> extends IntegerField {
 
   @override
   int get defaultValue => 0;
-
 }

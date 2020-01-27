@@ -33,23 +33,27 @@ import 'package:flutter_pom/model/sql_types.dart';
 import 'package:flutter_pom/model/table.dart';
 
 class QueryCountBuilder extends QueryBuilder {
-
   SQLWhereSelector _whereSelector;
 
   QueryCountBuilder(Table table) : super(table);
 
   QueryCountBuilder where(SQLCondition condition) {
-    if (_whereSelector != null) throw UnsupportedError("There is already a 'where' clause defined");
+    if (_whereSelector != null)
+      throw UnsupportedError("There is already a 'where' clause defined");
 
     _whereSelector = SQLWhereSelector(condition);
     return this;
   }
 
-
   String toSql() {
     var builder = <String>[];
-    builder.addAll(
-        [SQLKeywords.select, SQLKeywords.count, SQLKeywords.allSelector.inBrackets(), SQLKeywords.from, table.tableName]);
+    builder.addAll([
+      SQLKeywords.select,
+      SQLKeywords.count,
+      SQLKeywords.allSelector.inBrackets(),
+      SQLKeywords.from,
+      table.tableName
+    ]);
 
     if (_whereSelector != null) {
       builder.add(_whereSelector.toSql());

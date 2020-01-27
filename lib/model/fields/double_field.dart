@@ -7,7 +7,8 @@ class DoubleField extends Field<double> {
   @override
   void fromSqlCompatibleValue(dynamic value) {
     if (value == double.infinity || value == double.negativeInfinity) {
-      throw UnsupportedError("Infinity values are not supported by SQL Framework");
+      throw UnsupportedError(
+          "Infinity values are not supported by SQL Framework");
     }
     if (value == double.nan) {
       throw UnsupportedError("NaN values are not supported for DoubleField.");
@@ -40,5 +41,4 @@ class DoubleField extends Field<double> {
 
   @override
   double get defaultValue => 0;
-
 }

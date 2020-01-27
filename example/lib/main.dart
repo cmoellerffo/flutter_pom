@@ -44,7 +44,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  SampleDb db = SampleDb();
+  SampleDb db;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();

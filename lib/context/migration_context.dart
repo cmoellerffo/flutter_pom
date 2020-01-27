@@ -12,7 +12,8 @@ class MigrationContext {
   /// Adds a new field to the table
   Future<void> addField(Field f) async {
     var columnDefinition = ModelContext.buildCreateFieldStatement(f);
-    var statement = "ALTER TABLE ${table.tableName} ADD COLUMN $columnDefinition";
+    var statement =
+        "ALTER TABLE ${table.tableName} ADD COLUMN $columnDefinition";
     return await db.dbHandle.execute(statement);
   }
 }

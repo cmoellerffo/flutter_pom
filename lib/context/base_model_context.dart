@@ -6,7 +6,6 @@ typedef QueryCountBuilder CountBuilder(QueryCountBuilder builder);
 
 /// Abstract class
 abstract class BaseModelContext<T extends Table> {
-
   T get fields;
 
   Future<T> get(dynamic id);

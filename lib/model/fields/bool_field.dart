@@ -13,7 +13,8 @@ class BoolField extends Field<bool> {
       this.value = (value > 0);
     } else if (value is String) {
       this.value = (value.toLowerCase() == "true");
-    } else throw FieldConstraintError(this, "The value cannot be parsed to bool");
+    } else
+      throw FieldConstraintError(this, "The value cannot be parsed to bool");
   }
 
   @override
@@ -34,5 +35,4 @@ class BoolField extends Field<bool> {
   String toSql(bool f) {
     return (f ? "1" : "0");
   }
-
 }

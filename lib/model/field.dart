@@ -1,18 +1,21 @@
 import 'package:flutter_pom/errors/field_constraint_error.dart';
 
 abstract class Field<T> {
-
   String _name;
+
   /// Gets the name of the field
   String get name => _name;
 
   T _value;
+
   /// Gets the value
   T get value => _value;
+
   /// Sets the value
   set value(T value) {
     if (value == null && isNotNull) {
-      throw FieldConstraintError(this, "Unable to set NULL to a NOT NULL field.");
+      throw FieldConstraintError(
+          this, "Unable to set NULL to a NOT NULL field.");
     } else {
       _value = value;
       markDirty();
@@ -20,25 +23,29 @@ abstract class Field<T> {
   }
 
   bool _dirty = false;
+
   /// Gets whether the field was modified
   bool get dirty => _dirty;
 
   bool _primaryKey = false;
+
   /// Gets whether the field is a primary key
   bool get isPrimaryKey => _primaryKey;
 
   bool _autoIncrement = false;
+
   /// Gets whether the field is a auto increment field
   bool get isAutoIncrement => _autoIncrement;
 
   bool _notNull = false;
+
   /// Gets whether the field is marked as NOT NULL
   bool get isNotNull => _notNull;
 
   int _revision = 1;
+
   /// Gets the create fields revision
   int get revision => _revision;
-
 
   /// Creates a new instance
   Field(this._name, [this._value]);
@@ -60,7 +67,8 @@ abstract class Field<T> {
       _primaryKey = true;
       return this;
     } else {
-      throw FieldConstraintError(this, "This field cannot be made a primary key");
+      throw FieldConstraintError(
+          this, "This field cannot be made a primary key");
     }
   }
 
@@ -78,7 +86,8 @@ abstract class Field<T> {
     if (supportsAutoIncrement()) {
       _autoIncrement = true;
     } else {
-      throw FieldConstraintError(this, "The field does not support auto increment");
+      throw FieldConstraintError(
+          this, "The field does not support auto increment");
     }
     return this;
   }

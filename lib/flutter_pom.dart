@@ -1,7 +1,5 @@
 library flutter_pom;
 
-import 'package:flutter/cupertino.dart';
-
 export 'model/table.dart';
 export 'model/field.dart';
 export 'model/database.dart';
@@ -39,6 +37,3 @@ export 'builder/selectors/sql_selector.dart';
 export 'builder/selectors/sql_where_selector.dart';
 export 'builder/delete_builder.dart';
 export 'builder/query_count_builder.dart';
-
-
-

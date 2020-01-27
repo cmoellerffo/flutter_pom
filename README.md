@@ -108,10 +108,12 @@ void Do() async {
     var db = SampleDb();
     
     // open() the connection to the database. 
-    // This method has to be called once before accessing the database
+    // This method has to be called once before 
+    // accessing the database
     await db.open();
     
-    // Get the automatically created context of the table 'SampleTable'
+    // Get the automatically created context of the 
+    // table 'SampleTable'
     var context = await db.of<SampleTable>();
     
     // Create a new SampleTable item (think of it as a row)
@@ -126,7 +128,8 @@ void Do() async {
     // Get all items 
     var itemsFilter = await context.select();
     
-    // A complex filter scenario with comparison of field values and ordering
+    // A complex filter scenario with comparison of 
+    // field values and ordering
     // We also support limiting and offsets
     var itemsFilter2 = await c.select((q) {
           return q
@@ -137,13 +140,17 @@ void Do() async {
                  .offset(2);
         });    
     
-    // NOTICE: There is an alternative way of querying data using Dart included test methods.
-    // The downside of this approach is that all data will be queried and cached before the
+    // NOTICE: There is an alternative way of querying 
+    // data using Dart included test methods.
+    // The downside of this approach is that all data will 
+    // be queried and cached before the
     // filtering begins. 
-    // For datasets > 1k items you should use the 'select' method to do filtering on db level
+    // For datasets > 1k items you should use the 'select' 
+    // method to do filtering on db level
     // instead.
     //
-    // The following query filters the exact same data like 'itemsFilter2' without ordering 
+    // The following query filters the exact same data 
+    // like 'itemsFilter2' without ordering 
     // and limiting. This can later be done with dart language 
     
     var itemsFilter3 = await c.where((i) => 
@@ -166,7 +173,8 @@ void Do() async {
     // Update the item. Only changed values will be updated.
     await context.update(sampleItem);
     
-    // Register for the onCreate Stream that gets fired everytime somebody adds an item
+    // Register for the onCreate Stream that gets fired 
+    // everytime somebody adds an item
     context.onCreate.listen((sampleItem) {
       // do something with the item
     });

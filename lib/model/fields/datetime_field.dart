@@ -19,12 +19,12 @@ class DateTimeField extends Field<DateTime> {
     } else if (value is int) {
       this.value = DateTime.fromMillisecondsSinceEpoch(value);
     } else {
-      throw new FieldConstraintError(this, "Unable to convert value to DateTime.");
+      throw new FieldConstraintError(
+          this, "Unable to convert value to DateTime.");
     }
   }
 
   @override
-  // TODO: implement sqlType
   String get sqlType => SQLTypes.dateTime;
 
   @override
@@ -42,10 +42,8 @@ class DateTimeField extends Field<DateTime> {
   String toSql(v) {
     if (v == null) {
       return SQLTypes.nullValue;
-    }
-    else {
+    } else {
       return SQLTypes.toSqlString(DateFormat(sqlDateFormat).format(v));
     }
   }
-
 }

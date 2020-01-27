@@ -1,6 +1,5 @@
 import 'package:flutter_pom/model/table.dart';
 
-
 class SQLTypes {
   static final String text = "TEXT";
   static final String double = "DOUBLE";
@@ -83,7 +82,6 @@ extension SQLHelper on String {
     return SQLTypes.bracketOpen + this + SQLTypes.bracketClose;
   }
 }
-
 
 enum SQLSortOrder { Ascending, Descending }
 

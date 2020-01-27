@@ -30,7 +30,6 @@ import 'package:flutter_pom/builder/selectors/sql_selector.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 
 class SQLCondition extends SQLSelector {
-
   Field field;
   SQLComparators comparator;
   dynamic value;
@@ -80,12 +79,8 @@ class SQLCondition extends SQLSelector {
         break;
     }
 
-    builder.addAll([
-      operatorValue,
-      field.name,
-      comparatorValue,
-      field.toSql(value)
-    ]);
+    builder.addAll(
+        [operatorValue, field.name, comparatorValue, field.toSql(value)]);
 
     if (child != null) {
       builder.add(child.toSql());
@@ -149,8 +144,4 @@ extension SQLConditionExtension on Field {
   }
 }
 
-enum SQLLogicOperator {
-  none,
-  and,
-  or
-}
+enum SQLLogicOperator { none, and, or }

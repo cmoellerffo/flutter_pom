@@ -5,11 +5,9 @@ class $MigrationInfo extends Table {
 
   IdField id = IdField("id");
 
-  StringField name = StringField("table_name")
-      .notNull();
+  StringField name = StringField("table_name").notNull();
 
-  IntegerField tableRevision = IntegerField("revision")
-      .notNull();
+  IntegerField tableRevision = IntegerField("revision").notNull();
 
   @override
   Table getInstance() {
@@ -18,14 +16,9 @@ class $MigrationInfo extends Table {
 
   @override
   List<Field> initializeFields() {
-    return [
-      id,
-      name,
-      tableRevision
-    ];
+    return [id, name, tableRevision];
   }
 
   @override
   int get revision => 1;
-
 }

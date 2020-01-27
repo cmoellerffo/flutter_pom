@@ -16,7 +16,7 @@ class IntegerField extends Field<int> {
 
   @override
   bool supportsAutoIncrement() {
-      return true;
+    return true;
   }
 
   @override
@@ -27,5 +27,4 @@ class IntegerField extends Field<int> {
 
   @override
   int get defaultValue => 0;
-
 }

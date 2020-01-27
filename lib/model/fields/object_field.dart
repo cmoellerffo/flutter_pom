@@ -17,8 +17,7 @@ class ObjectField<T extends Serializable> extends Field {
   void fromSqlCompatibleValue(value) {
     if (value is T) {
       this.value = value;
-    } else {
-    }
+    } else {}
   }
 
   @override
@@ -31,5 +30,4 @@ class ObjectField<T extends Serializable> extends Field {
   bool supportsAutoIncrement() {
     return false;
   }
-
 }

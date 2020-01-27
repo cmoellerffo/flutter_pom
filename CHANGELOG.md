@@ -1,3 +1,23 @@
+## [0.1.17] - 27.01.2020
+
+* Added 'enableMigrations: bool' to Database. This enables automatic migration in case of new fields
+* In your table you can now override the method 'Future<void> migrate(MigrationContext context, int fromRevision, int toRevision) async' to do some internal migration stuff
+* Fixed bug in 'update' QueryBuilder
+* Fixed bug in 'delete' QueryBuilder
+
+## [0.1.16+3] - 24.01.2020
+
+* Removed 'event' section from library. This is a cosmetic thing as it was not used in production until not
+
+## [0.1.16+2] - 24.01.2020
+
+* Dart-Formatting aligned
+
+## [0.1.16+1] - 24.01.2020
+
+* Fixed UpdateBuilder to include SET statements properly
+* Did some more refactoring and formatting
+
 ## [0.1.16] - 24.01.2020
 
 * Added Streams for 'onCreate', 'onDelete' and 'onUpdate'

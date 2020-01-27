@@ -32,7 +32,6 @@ import 'package:flutter_pom/model/sql_types.dart';
 import 'package:flutter_pom/model/table.dart';
 
 class UpdateBuilder {
-
   SQLWhereSelector _whereSelector;
   List<SQLCondition> _assignments;
   Table _table;
@@ -40,16 +39,17 @@ class UpdateBuilder {
   UpdateBuilder(this._table, this._assignments);
 
   UpdateBuilder where(SQLCondition condition) {
-    if (_whereSelector != null) throw UnsupportedError("There is already a 'where' clause defined");
+    if (_whereSelector != null)
+      throw UnsupportedError("There is already a 'where' clause defined");
     _whereSelector = SQLWhereSelector(condition);
     return this;
   }
 
-
   String toSql() {
     var builder = <String>[];
-    builder.addAll(
-        [SQLKeywords.update, _table.tableName, ]);
+    builder.addAll([SQLKeywords.update, _table.tableName, SQLKeywords.set]);
+
+    builder.add(_assignments.map((a) => a.toSql()).join(SQLTypes.comma));
 
     if (_whereSelector != null) {
       builder.add(_whereSelector.toSql());

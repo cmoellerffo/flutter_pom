@@ -38,16 +38,19 @@ class DeleteBuilder {
   DeleteBuilder(this._table);
 
   DeleteBuilder where(SQLCondition condition) {
-    if (_whereSelector != null) throw UnsupportedError("There is already a 'where' clause defined");
+    if (_whereSelector != null)
+      throw UnsupportedError("There is already a 'where' clause defined");
     _whereSelector = SQLWhereSelector(condition);
     return this;
   }
 
-
   String toSql() {
     var builder = <String>[];
-    builder.addAll(
-        [SQLKeywords.delete, _table.tableName, ]);
+    builder.addAll([
+      SQLKeywords.delete,
+      SQLKeywords.from,
+      _table.tableName,
+    ]);
 
     if (_whereSelector != null) {
       builder.add(_whereSelector.toSql());

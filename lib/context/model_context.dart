@@ -105,7 +105,7 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     if (updatedFields.length > 0) {
       var fieldValues = updatedFields.map((f) => f.equals(f.value));
 
-      var updateBuilder = UpdateBuilder(_table, fieldValues)
+      var updateBuilder = UpdateBuilder(_table, fieldValues.toList())
           .where(obj.idField.equals(obj.idField.value));
 
       await _db.dbHandle.execute(updateBuilder.toSql());

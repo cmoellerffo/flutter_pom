@@ -30,11 +30,6 @@ class SecureStringField extends Field<String> {
     return false;
   }
 
-  @override
-  bool operator ==(secureString) {
-    return _sha1(secureString).toString() == this.value;
-  }
-
   String _sha1(String insecure) {
     var bytes = utf8.encode(value);
     var sha = sha1.convert(bytes);
