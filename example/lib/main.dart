@@ -30,9 +30,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key) {
-    db = SampleDb();
-  }
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -44,7 +42,6 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  SampleDb db;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -52,9 +49,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  SampleDb db = SampleDb();
 
   void _incrementCounter() async {
-    var c = await widget.db.of<SampleTable2>();
+    var c = await db.of<SampleTable2>();
     c.onCreate.listen((s) {
       print("${s.id} ${s.dateTime} ${s.counterValue}");
     });

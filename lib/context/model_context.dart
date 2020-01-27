@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_pom/builder/delete_builder.dart';
 import 'package:flutter_pom/builder/query_count_builder.dart';
 import 'package:flutter_pom/builder/update_builder.dart';
+import 'package:flutter_pom/context/pom_logger.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/context/base_model_context.dart';
 import 'package:flutter_pom/model/sql_types.dart';
@@ -51,7 +52,9 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
       queryBuilder = q(queryBuilder);
     }
 
+    PomLogger.instance.log.d(queryBuilder.toSql());
     var returnData = await _db.dbHandle.rawQuery(queryBuilder.toSql());
+    PomLogger.instance.log.d(returnData);
 
     return returnData.first.values.first;
   }
@@ -65,7 +68,9 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
       querySelectBuilder = q(querySelectBuilder);
     }
 
+    PomLogger.instance.log.d(querySelectBuilder.toSql());
     var returnData = await _db.dbHandle.rawQuery(querySelectBuilder.toSql());
+    PomLogger.instance.log.d(returnData);
 
     for (var item in returnData) {
       var modelItem = _table.getInstance();
@@ -108,6 +113,8 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
       var updateBuilder = UpdateBuilder(_table, fieldValues.toList())
           .where(obj.idField.equals(obj.idField.value));
 
+      PomLogger.instance.log.d(updateBuilder.toSql());
+
       await _db.dbHandle.execute(updateBuilder.toSql());
 
       _updateController.add(obj);
@@ -133,6 +140,8 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
         .toList();
 
     var statement = obj.insert(fieldNames, fieldValues);
+
+    PomLogger.instance.log.d(statement);
 
     await _db.dbHandle.execute(statement);
 
@@ -160,6 +169,7 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   Future<void> deleteById(int id) async {
     var deleteBuilder =
         DeleteBuilder(_table).where(_table.idField.equals(id.toString()));
+    PomLogger.instance.log.d(deleteBuilder.toSql());
     await _db.dbHandle.execute(deleteBuilder.toSql());
     _deleteController.add(id);
     return;
@@ -167,7 +177,9 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   /// Deletes all data from the table
   Future<void> deleteAll() async {
-    await _db.dbHandle.execute(DeleteBuilder(_table).toSql());
+    var builderSql = DeleteBuilder(_table).toSql();
+    PomLogger.instance.log.d(builderSql);
+    await _db.dbHandle.execute(builderSql);
     _deleteController.add("all");
     return;
   }
@@ -184,6 +196,9 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
           _table.fields.map((f) => buildCreateFieldStatement(f));
       var createStatement =
           "CREATE TABLE IF NOT EXISTS ${_table.tableName} (${fieldDefinitions.join(',')})";
+
+      PomLogger.instance.log.d(createStatement);
+
       await _db.dbHandle.execute(createStatement);
     }
   }

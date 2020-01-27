@@ -1,7 +1,9 @@
 import 'package:flutter_pom/context/base_model_context.dart';
 import 'package:flutter_pom/context/migration_context.dart';
 import 'package:flutter_pom/context/model_context.dart';
+import 'package:flutter_pom/context/pom_logger.dart';
 import 'package:flutter_pom/model/migration_info.dart';
+import 'package:flutter_pom/builder/selectors/sql_condition.dart';
 import 'package:flutter_pom/model/table.dart';
 import 'package:sqflite/sqflite.dart' as b;
 
@@ -32,6 +34,7 @@ abstract class Database {
     _name = name;
 
     if (this.autoOpen) {
+      PomLogger.instance.log.d("Auto-opening database '$name'");
       open();
     }
   }
@@ -43,10 +46,12 @@ abstract class Database {
     _tables.forEach((t, v) async {
       var table = _tables[t];
 
-      print("*** Running Migration for ${table.tableName} ***");
+      PomLogger.instance.log.d("*** Running Migration for '${table.tableName}' ***");
 
       var tableInfo =
-          await _migrationContext.where((q) => q.name.value == table.tableName);
+        await _migrationContext.select((q) {
+          return q.where(_migrationContext.fields.name.equals(table.tableName));
+        });
 
       /// If there is exactly one entry inside the model cache table
       if (tableInfo.length == 1) {
@@ -59,6 +64,7 @@ abstract class Database {
           for (var migrateVersion = migrationInfo.tableRevision.value;
               migrateVersion <= table.revision;
               migrateVersion++) {
+            PomLogger.instance.log.d("Migrating '${table.tableName}' from Revision ${migrationInfo.tableRevision.value} to $migrateVersion ...");
             await table.migrate(MigrationContext(this, table),
                 migrationInfo.tableRevision.value, migrateVersion);
             migrationInfo.tableRevision.value = migrateVersion;
@@ -70,6 +76,7 @@ abstract class Database {
         }
         /// If there is no model cached we create a new entry
       } else if (tableInfo.length == 0) {
+        PomLogger.instance.log..i("No model cache found for table ${table.tableName}.");
         var newMigrationInfo = $MigrationInfo();
         newMigrationInfo.name.value = table.tableName;
         newMigrationInfo.tableRevision.value = table.revision;
