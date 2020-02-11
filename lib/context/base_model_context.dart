@@ -1,8 +1,10 @@
 import 'package:flutter_pom/builder/query_count_builder.dart';
+import 'package:flutter_pom/builder/query_distinct_builder.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 
 typedef QuerySelectBuilder SelectBuilder(QuerySelectBuilder builder);
 typedef QueryCountBuilder CountBuilder(QueryCountBuilder builder);
+typedef QueryDistinctBuilder DistinctBuilder(QueryDistinctBuilder builder);
 
 /// Abstract class
 abstract class BaseModelContext<T extends Table> {
@@ -22,6 +24,7 @@ abstract class BaseModelContext<T extends Table> {
 
   Future<List<T>> select([SelectBuilder callback]);
   Future<int> count([CountBuilder callback]);
+  Future<List<dynamic>> distinct<Q extends Field>(Q f,[DistinctBuilder callback]);
 
   Stream<T> get onUpdate;
   Stream<T> get onDelete;

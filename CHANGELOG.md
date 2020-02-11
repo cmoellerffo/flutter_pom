@@ -1,3 +1,56 @@
+## [0.1.24+1] - 11.02.2020
+
+* Moved repository to GitHub
+
+## [0.1.24] - 10.02.2020
+
+* Removed logging for now. It will be available again in the next release in a configurable form
+* Fixed a bug that lead to error-messages while querying 'last_row_id()' for non-Integer key fields
+
+## [0.1.23+1] - 30.01.2020
+
+* Added new Section do Documentation showing the usage of the KeyField
+
+## [0.1.23] - 30.01.2020
+
+* You can now reference other tables inside a table using the KeyField field
+
+## [0.1.22] - 29.01.2020
+
+* Fixed critical bug in 'delete' builder that prevented creating a valid query
+
+## [0.1.21] - 28.01.2020
+
+* Fixed migration related bugs
+
+## [0.1.20] - 28.01.2020
+
+* Fixed migration related bugs
+
+## [0.1.19] - 27.01.2020
+
+* Added 'distinct' method for querying single field values distinct
+
+## [0.1.18+4] - 27.01.2020
+
+* Fixed value assignment bug on query deserialization
+
+## [0.1.18+3] - 27.01.2020
+
+* Fixed value assignment bug in SecureString field 
+
+## [0.1.18+2] - 27.01.2020
+
+* Fixed String comparison of SecureString field
+
+## [0.1.18+1] - 27.01.2020
+
+* Moved FieldExtensions to Field Class
+
+## [0.1.18] - 27.01.2020
+
+* Added Logging Framework for better insights on whats going on
+
 ## [0.1.17] - 27.01.2020
 
 * Added 'enableMigrations: bool' to Database. This enables automatic migration in case of new fields

@@ -14,7 +14,7 @@ class SecureStringField extends Field<String> {
 
   @override
   void fromSqlCompatibleValue(dynamic value) {
-    this.value = value;
+    super.value = value;
   }
 
   @override
@@ -30,8 +30,12 @@ class SecureStringField extends Field<String> {
     return false;
   }
 
+  bool equalsString(String insecure) {
+    return this.value == _sha1(insecure);
+  }
+
   String _sha1(String insecure) {
-    var bytes = utf8.encode(value);
+    var bytes = utf8.encode(insecure);
     var sha = sha1.convert(bytes);
     return sha.toString();
   }

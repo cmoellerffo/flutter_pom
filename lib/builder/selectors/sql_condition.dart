@@ -102,46 +102,4 @@ class SQLCondition extends SQLSelector {
   }
 }
 
-extension SQLConditionExtension on Field {
-  SQLCondition compare(dynamic value, SQLComparators comparator) {
-    return SQLCondition(this, comparator, value);
-  }
-
-  SQLCondition compareField(Field field, SQLComparators comparator) {
-    return compare(field.toSqlCompatibleValue(), comparator);
-  }
-
-  SQLCondition equals(dynamic value) {
-    return compare(value, SQLComparators.Equals);
-  }
-
-  SQLCondition equalsField(Field value) {
-    return compare(value.toSqlCompatibleValue(), SQLComparators.Equals);
-  }
-
-  SQLCondition notEquals(dynamic value) {
-    return compare(value, SQLComparators.NotEquals);
-  }
-
-  SQLCondition notEqualsField(Field field) {
-    return compare(field.toSqlCompatibleValue(), SQLComparators.NotEquals);
-  }
-
-  SQLCondition gt(dynamic value) {
-    return compare(value, SQLComparators.Greater);
-  }
-
-  SQLCondition gte(dynamic value) {
-    return compare(value, SQLComparators.GreaterOrEqual);
-  }
-
-  SQLCondition lt(dynamic value) {
-    return compare(value, SQLComparators.Lower);
-  }
-
-  SQLCondition lte(dynamic value) {
-    return compare(value, SQLComparators.LowerOrEqual);
-  }
-}
-
 enum SQLLogicOperator { none, and, or }

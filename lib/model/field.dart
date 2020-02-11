@@ -1,4 +1,5 @@
 import 'package:flutter_pom/errors/field_constraint_error.dart';
+import 'package:flutter_pom/flutter_pom.dart';
 
 abstract class Field<T> {
   String _name;
@@ -117,4 +118,44 @@ abstract class Field<T> {
   }
 
   T get defaultValue;
+
+  SQLCondition compare(dynamic value, SQLComparators comparator) {
+    return SQLCondition(this, comparator, value);
+  }
+
+  SQLCondition compareField(Field field, SQLComparators comparator) {
+    return compare(field.toSqlCompatibleValue(), comparator);
+  }
+
+  SQLCondition equals(dynamic value) {
+    return compare(value, SQLComparators.Equals);
+  }
+
+  SQLCondition equalsField(Field value) {
+    return compare(value.toSqlCompatibleValue(), SQLComparators.Equals);
+  }
+
+  SQLCondition notEquals(dynamic value) {
+    return compare(value, SQLComparators.NotEquals);
+  }
+
+  SQLCondition notEqualsField(Field field) {
+    return compare(field.toSqlCompatibleValue(), SQLComparators.NotEquals);
+  }
+
+  SQLCondition gt(dynamic value) {
+    return compare(value, SQLComparators.Greater);
+  }
+
+  SQLCondition gte(dynamic value) {
+    return compare(value, SQLComparators.GreaterOrEqual);
+  }
+
+  SQLCondition lt(dynamic value) {
+    return compare(value, SQLComparators.Lower);
+  }
+
+  SQLCondition lte(dynamic value) {
+    return compare(value, SQLComparators.LowerOrEqual);
+  }
 }

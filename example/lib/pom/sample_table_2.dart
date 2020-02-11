@@ -1,3 +1,4 @@
+import 'package:example/pom/sample_table.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/model/fields/id_field.dart';
 import 'package:flutter_pom/model/fields/integer_field.dart';
@@ -21,6 +22,8 @@ class SampleTable2 extends Table {
   final IntegerField staticValue2 = IntegerField("static2")
     ..atRevision(4);
 
+  final KeyField<SampleTable> keyField = KeyField<SampleTable>("sample_table_id");
+
   @override
   Table getInstance() {
     return SampleTable2();
@@ -33,7 +36,8 @@ class SampleTable2 extends Table {
       counterValue,
       dateTime,
       staticValue,
-      staticValue2
+      staticValue2,
+      keyField
     ];
   }
 

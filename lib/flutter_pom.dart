@@ -15,6 +15,7 @@ export 'model/fields/datetime_field.dart';
 export 'model/fields/bool_field.dart';
 export 'model/fields/secure_string_field.dart';
 export 'model/fields/object_field.dart';
+export 'model/fields/key_field.dart';
 
 // Errors
 
@@ -28,6 +29,7 @@ export 'errors/duplicate_field_error.dart';
 // Helpers
 
 export 'model/sql_types.dart';
+export 'extensions/list_extensions.dart';
 
 // Query Builder
 

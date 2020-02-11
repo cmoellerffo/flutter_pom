@@ -2,15 +2,21 @@ import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/model/sql_types.dart';
 
 class KeyField<T extends Table> extends IntegerField {
-  KeyField(String name, T binding) : super(name) {
-    this.binding = binding;
+  KeyField(String name) : super(name);
+
+  T _binding;
+  T get binding => _binding;
+  set binding(T value) {
+    _binding = value;
+    itemKey = value.idField.value;
   }
 
-  T binding;
+  /// Gets or sets the itemKey
+  int itemKey = -1;
 
   @override
   void fromSqlCompatibleValue(dynamic value) {
-    this.value = value;
+    itemKey = value;
   }
 
   @override
@@ -28,7 +34,7 @@ class KeyField<T extends Table> extends IntegerField {
 
   @override
   String toSqlCompatibleValue() {
-    return binding.idField.value;
+    return itemKey.toString();
   }
 
   @override

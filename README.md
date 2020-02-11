@@ -180,3 +180,55 @@ void Do() async {
     });
 }
 ```
+
+### Relating Tables 
+Starting with version 0.1.23 you can now bind tables to a field. This gives you the chance
+to create dependent tables you can query with a new list extension.
+
+For now only 1:1 relations are supported.
+
+The following code will give you an example of how to get started:
+```dart
+class User extends Table {
+  /// We only show things that changed here. 
+  /// The Table implementation is still the same 
+  /// as described prior.
+  StringField userName = StringField("user_name").notNull();
+ 
+  /// Here we reference the job table. 
+  /// The framework will internally save the id of the
+  /// referenced table item only
+  KeyField<Job> job = KeyField<Job>("job_id");
+}
+
+/// You may want to manage existing jobs in a seperate table
+class Job extends Table {
+  /// Same as above
+  StringField jobName = StringField("job_name").notNull();
+}
+
+
+/// Example Method adding a new user with a *new* job
+void addUser(User user, Job job) async {
+  var users = await db.of<User>();  
+  var jobs = await db.of<Job>();
+  
+  user.job.binding = job;
+  
+  await jobs.put(job);
+  await users.put(user);
+}
+
+/// Example method reading all users and resolving 
+/// all job items automatically
+void getUsers() async {
+  var users = await db.of<User>();
+  var jobs = await db.of<Job>();
+  
+  /// Here we select all users and then call the method
+  /// 'include' on the resulting list.
+  /// 'include' expects the database context and the field
+  /// you want to resolve.
+  var userList = users.select().include<Job>(db, User().job);
+}
+```

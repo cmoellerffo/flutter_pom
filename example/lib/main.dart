@@ -1,3 +1,4 @@
+import 'package:example/pom/sample_table.dart';
 import 'package:example/pom/sample_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pom/flutter_pom.dart';
@@ -52,16 +53,26 @@ class _MyHomePageState extends State<MyHomePage> {
   SampleDb db = SampleDb();
 
   void _incrementCounter() async {
-    var c = await db.of<SampleTable2>();
-    c.onCreate.listen((s) {
-      print("${s.id} ${s.dateTime} ${s.counterValue}");
-    });
+    var c1 = await db.of<SampleTable>();
+    var c2 = await db.of<SampleTable2>();
+
+    var item1 = SampleTable();
+    item1.counterValue.value = _counter + 1;
+    item1.dateTime.value = DateTime.now();
+
+    await c1.put(item1);
 
     var item = SampleTable2();
     item.counterValue.value = _counter + 1;
     item.dateTime.value = DateTime.now();
+    item.keyField.binding = item1;
 
-    await c.put(item);
+    await c2.put(item);
+
+    var itemRef = await c2.select();
+    var items = await itemRef.include<SampleTable>(db, SampleTable2().keyField);
+
+    print(items);
 
     setState(() {
       // This call to setState tells the Flutter framework that something has

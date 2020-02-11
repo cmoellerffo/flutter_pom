@@ -3,7 +3,7 @@ import 'package:flutter_pom/flutter_pom.dart';
 class $MigrationInfo extends Table {
   $MigrationInfo() : super("_migration_info");
 
-  IdField id = IdField("id");
+  IdField id = IdField("id").autoIncrement();
 
   StringField name = StringField("table_name").notNull();
 

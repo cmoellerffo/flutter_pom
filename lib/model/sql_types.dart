@@ -55,6 +55,8 @@ class SQLKeywords {
   static final String count = "COUNT";
   static final String limit = "LIMIT";
   static final String offset = "OFFSET";
+  static final String distinct = "DISTINCT";
+
   static final String dropTable =
       "DROP${SQLTypes.separator}${SQLKeywords.table}${SQLTypes.separator}IF${SQLTypes.separator}NOT${SQLTypes.separator}EXISTS";
 }
