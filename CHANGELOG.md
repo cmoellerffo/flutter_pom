@@ -1,3 +1,7 @@
+## [0.1.25] - 21.02.2020
+
+* Added indexing support for all types of fields and automatic index creation 
+
 ## [0.1.24+1] - 11.02.2020
 
 * Moved repository to GitHub

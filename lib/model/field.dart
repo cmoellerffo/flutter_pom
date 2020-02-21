@@ -51,6 +51,14 @@ abstract class Field<T> {
     }
   }
 
+  bool _idxUnique = false;
+  /// Gets whether the index is unique or not
+  bool get idxUnique => _idxUnique;
+
+  bool _idxCreate = false;
+  /// Gets whether there will be an index
+  bool get idxCreate => _idxCreate;
+
   bool _dirty = false;
 
   /// Gets whether the field was modified
@@ -88,6 +96,14 @@ abstract class Field<T> {
   /// Marks the field value as dirty
   void markDirty() {
     _dirty = true;
+  }
+
+  /// Adds an index to the configured field and sets whether
+  /// the index values shall be [unique]
+  Field withIndex({bool unique = false}) {
+    _idxCreate = true;
+    _idxUnique = unique;
+    return this;
   }
 
   /// Sets the field as primary key

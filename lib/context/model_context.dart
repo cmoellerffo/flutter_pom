@@ -256,9 +256,21 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
       var createStatement =
           "CREATE TABLE IF NOT EXISTS ${_table.tableName} (${fieldDefinitions.join(',')})";
 
-      //PomLogger.instance.log.d(createStatement);
+      // create indexes for all fields that require indexes
+      for (var field in _table.fields.where((f) => f.idxCreate)) {
+        await _createIdx(field);
+      }
 
       await _db.dbHandle.execute(createStatement);
+    }
+  }
+
+  Future<void> _createIdx(Field field) async {
+    if (field.idxCreate) {
+      var uniqueKey = (field.idxUnique) ? "UNIQUE" : "";
+      var createIdxStatement = "CREATE $uniqueKey INDEX idx_${_table.tableName}_${field.name} ON ${_table.tableName}(${field.name})";
+
+      await _db.dbHandle.execute(createIdxStatement);
     }
   }
 

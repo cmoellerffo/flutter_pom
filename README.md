@@ -232,3 +232,14 @@ void getUsers() async {
   var userList = users.select().include<Job>(db, User().job);
 }
 ```
+
+### Indexing fields
+
+You can easily let POM create indexes for your fields by adding .withIndex()
+to the field definition:
+
+````dart
+StringField email = StringField("email").withIndex(unique: true);
+````
+
+You can also define whether the indexed values shall be unique or not.
