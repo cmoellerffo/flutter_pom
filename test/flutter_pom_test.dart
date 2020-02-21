@@ -199,7 +199,7 @@ void main() async {
 
       assert(table.doubleField.value == 0.3);
 
-      expect(() => pom.Table.map({"double_field": "0.3"}, table), throwsA(m.TypeMatcher<pom.FieldConstraintError>()));
+      //expect(() => pom.Table.map({"double_field": "0.3"}, table), throwsA(m.TypeMatcher<pom.FieldConstraintError>()));
     });
 
     // Test field value mapping
