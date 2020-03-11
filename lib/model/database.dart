@@ -29,8 +29,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import 'dart:io';
 
 import 'package:flutter_pom/context/base_model_context.dart';
+import 'package:flutter_pom/context/base_model_transaction.dart';
 import 'package:flutter_pom/context/migration_context.dart';
 import 'package:flutter_pom/context/model_context.dart';
+import 'package:flutter_pom/context/model_transaction.dart';
 import 'package:flutter_pom/model/migration_info.dart';
 import 'package:flutter_pom/model/table.dart';
 import 'package:sqflite/sqflite.dart' as b;
@@ -98,6 +100,12 @@ abstract class Database {
       //PomLogger.instance.log.d("Auto-opening database '$name'");
       open();
     }
+  }
+
+  /// Returns a new [ModelTransaction] transaction container for executing
+  /// queries in a transactional way
+  BaseModelTransaction transaction() {
+    return ModelTransaction(this);
   }
 
   /// Runs the automatic migration of all [Table]s inside this [Database] by

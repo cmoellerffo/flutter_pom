@@ -1,11 +1,38 @@
+/*
+BSD 2-Clause License
+
+Copyright (c) 2020, VIVASECUR GmbH
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_pom/flutter_pom.dart' as pom;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matcher/matcher.dart' as m;
-
 import 'flutter_pom_test_table.dart';
 
-
+// Main Test entry point
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -163,7 +190,6 @@ void main() async {
       expect(() => pom.Table.map({"datetime_field": 0.4}, table), throwsA(m.TypeMatcher<pom.FieldConstraintError>()));
       expect(pom.Table.map({"datetime_field": 12345678}, table), isInstanceOf<pom.Table>());
       expect(pom.Table.map({"datetime_field": DateTime.now()}, table), isInstanceOf<pom.Table>());
-
     });
 
     // Test field value mapping
@@ -199,7 +225,15 @@ void main() async {
 
       assert(table.doubleField.value == 0.3);
 
-      //expect(() => pom.Table.map({"double_field": "0.3"}, table), throwsA(m.TypeMatcher<pom.FieldConstraintError>()));
+      pom.Table.map({
+        "double_field": "0.8"
+      }, table);
+
+      assert(table.doubleField.value == 0.3);
+
+      //expect(() => pom.Table.map({"double_field": double.nan}, table), throwsA(m.TypeMatcher<UnsupportedError>()));
+      //expect(() => pom.Table.map({"double_field": double.infinity}, table), throwsA(m.TypeMatcher<UnsupportedError>()));
+      //expect(() => pom.Table.map({"double_field": double.negativeInfinity}, table), throwsA(m.TypeMatcher<UnsupportedError>()));
     });
 
     // Test field value mapping
@@ -215,6 +249,23 @@ void main() async {
 
       expect(pom.Table.map({"object_field": KeyValuePair('a', 'b')}, table), isInstanceOf<pom.Table>());
       //expect(() => pom.Table.map({"object_field": 128}, table), throwsA(m.TypeMatcher<pom.FieldConstraintError>()));
+    });
+
+    // Test secure string field
+    test('Field "secure_string" mapping', () {
+      var table = FlutterPomTestTable();
+      const testString = "abcdef";
+
+      pom.Table.map({
+        "secure_string": testString
+      }, table);
+
+      assert(table.secureStringField.value == testString);
+
+      table.secureStringField.value = testString;
+
+      assert(table.secureStringField.value != testString);
+      assert(table.secureStringField.equalsString(testString));
     });
   });
 }

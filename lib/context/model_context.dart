@@ -36,6 +36,8 @@ import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/context/base_model_context.dart';
 import 'package:flutter_pom/model/sql_types.dart';
 
+import 'base_model_transaction.dart';
+
 class ModelContext<T extends Table> implements BaseModelContext<T> {
   Database _db;
   T _table;
@@ -156,7 +158,7 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   }
 
   /// Updates the object
-  Future<void> update(T obj) async {
+  Future<void> update(T obj, {BaseModelTransaction transaction}) async {
     var updatedFields = obj.fields.where((f) => f.dirty && !f.isAutoIncrement);
 
     if (updatedFields.length > 0) {
@@ -167,22 +169,24 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
       //PomLogger.instance.log.d(updateBuilder.toSql());
 
-      await _db.dbHandle.execute(updateBuilder.toSql());
-
+      if (transaction != null) {
+        transaction.add(updateBuilder.toSql());
+      } else {
+        await _db.dbHandle.execute(updateBuilder.toSql());
+      }
       _updateController.add(obj);
-
       return;
     }
     return;
   }
 
   /// Updates a range of items
-  Future<void> updateRange(List<T> objList) async {
-    return objList.forEach((f) async => await update(f));
+  Future<void> updateRange(List<T> objList, {BaseModelTransaction transaction}) async {
+    return objList.forEach((f) async => await update(f, transaction: transaction));
   }
 
   /// Puts an item
-  Future<void> put(T obj) async {
+  Future<void> put(T obj, {BaseModelTransaction transaction}) async {
     var fieldNames =
         obj.fields.where((f) => !f.isAutoIncrement).map((f) => f.name).toList();
 
@@ -193,15 +197,20 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
     var statement = obj.insert(fieldNames, fieldValues);
 
-    //PomLogger.instance.log.d(statement);
-    await _db.dbHandle.execute(statement);
 
-    var rowId = await _db.dbHandle.rawQuery("SELECT last_insert_rowid()");
-
-    if (obj.idField.sqlType == SQLTypes.integer) {
-      obj.idField.value = rowId.first.values.first;
+    if (transaction != null) {
+      transaction.add(statement);
     } else {
-      // We do not reparse the id as it may be a string or something else
+      //PomLogger.instance.log.d(statement);
+      await _db.dbHandle.execute(statement);
+
+      var rowId = await _db.dbHandle.rawQuery("SELECT last_insert_rowid()");
+
+      if (obj.idField.sqlType == SQLTypes.integer) {
+        obj.idField.value = rowId.first.values.first;
+      } else {
+        // We do not reparse the id as it may be a string or something else
+      }
     }
 
     _addController.add(obj);
@@ -210,35 +219,45 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   }
 
   /// Puts all items
-  Future<void> putRange(List<T> obj) async {
-    return obj.forEach((f) async => await put(f));
+  Future<void> putRange(List<T> obj, {BaseModelTransaction transaction}) async {
+    return obj.forEach((f) async => await put(f, transaction: transaction));
   }
 
   /// Deletes an item by obj
-  Future<void> delete(T obj) async {
-    return await deleteById(obj.idField.value);
+  Future<void> delete(T obj, {BaseModelTransaction transaction}) async {
+    return await deleteById(obj.idField.value, transaction: transaction);
   }
 
   /// Deletes a range of items
-  Future<void> deleteRange(List<T> objList) async {
-    return objList.forEach((f) async => await delete(f));
+  Future<void> deleteRange(List<T> objList, {BaseModelTransaction transaction}) async {
+    return objList.forEach((f) async => await delete(f, transaction: transaction));
   }
 
   /// Deletes an item by id
-  Future<void> deleteById(int id) async {
+  Future<void> deleteById(int id, {BaseModelTransaction transaction}) async {
     var deleteBuilder =
         DeleteBuilder(_table).where(_table.idField.equals(id));
     //PomLogger.instance.log.d(deleteBuilder.toSql());
-    await _db.dbHandle.execute(deleteBuilder.toSql());
+
+    if (transaction != null) {
+      transaction.add(deleteBuilder.toSql());
+    } else {
+      await _db.dbHandle.execute(deleteBuilder.toSql());
+    }
     _deleteController.add(id);
     return;
   }
 
   /// Deletes all data from the table
-  Future<void> deleteAll() async {
+  Future<void> deleteAll({BaseModelTransaction transaction}) async {
     var builderSql = DeleteBuilder(_table).toSql();
     //PomLogger.instance.log.d(builderSql);
-    await _db.dbHandle.execute(builderSql);
+
+    if (transaction != null) {
+      transaction.add(builderSql);
+    } else {
+      await _db.dbHandle.execute(builderSql);
+    }
     _deleteController.add("all");
     return;
   }

@@ -1,3 +1,7 @@
+## [0.1.26] - 11.03.2020
+
+* Added support for Transactions
+
 ## [0.1.25] - 21.02.2020
 
 * Added indexing support for all types of fields and automatic index creation 

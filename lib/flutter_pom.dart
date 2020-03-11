@@ -32,6 +32,7 @@ export 'model/table.dart';
 export 'model/field.dart';
 export 'model/database.dart';
 export 'model/serializable.dart';
+export 'context/base_model_transaction.dart';
 
 // Fields
 

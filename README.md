@@ -243,3 +243,18 @@ StringField email = StringField("email").withIndex(unique: true);
 ````
 
 You can also define whether the indexed values shall be unique or not.
+
+### Transaction Support (since 0.1.26)
+
+You can easily manage your transactions by using the 'transaction()' method
+of your database and provide it to all supported methods inside your context.
+
+Example:
+````dart
+var txn = db.transaction();
+
+await db.of<User>().add(newUser, txn);
+await db.of<User>().deleteById(5, txn);
+
+await txn.commit();
+````

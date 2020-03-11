@@ -28,6 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import 'package:flutter_pom/builder/query_count_builder.dart';
 import 'package:flutter_pom/builder/query_distinct_builder.dart';
+import 'package:flutter_pom/context/base_model_transaction.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 
 typedef QuerySelectBuilder SelectBuilder(QuerySelectBuilder builder);
@@ -39,14 +40,14 @@ abstract class BaseModelContext<T extends Table> {
   T get fields;
 
   Future<T> get(dynamic id);
-  Future<void> update(T obj);
-  Future<void> updateRange(List<T> objList);
-  Future<void> put(T obj);
-  Future<void> putRange(List<T> obj);
-  Future<void> delete(T obj);
-  Future<void> deleteRange(List<T> objList);
-  Future<void> deleteById(int id);
-  Future<void> deleteAll();
+  Future<void> update(T obj, {BaseModelTransaction transaction});
+  Future<void> updateRange(List<T> objList, {BaseModelTransaction transaction});
+  Future<void> put(T obj, {BaseModelTransaction transaction});
+  Future<void> putRange(List<T> obj, {BaseModelTransaction transaction});
+  Future<void> delete(T obj, {BaseModelTransaction transaction});
+  Future<void> deleteRange(List<T> objList, {BaseModelTransaction transaction});
+  Future<void> deleteById(int id, {BaseModelTransaction transaction});
+  Future<void> deleteAll({BaseModelTransaction transaction});
 
   Future<Iterable<T>> where(bool test(T element));
 
