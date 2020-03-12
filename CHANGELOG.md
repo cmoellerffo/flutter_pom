@@ -1,6 +1,7 @@
 ## [0.1.26] - 11.03.2020
 
 * Added support for Transactions
+* Fixed bug when deleting entities with non-integer ID fields
 
 ## [0.1.25] - 21.02.2020
 

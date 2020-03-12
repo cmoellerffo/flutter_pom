@@ -234,7 +234,7 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   }
 
   /// Deletes an item by id
-  Future<void> deleteById(int id, {BaseModelTransaction transaction}) async {
+  Future<void> deleteById(dynamic id, {BaseModelTransaction transaction}) async {
     var deleteBuilder =
         DeleteBuilder(_table).where(_table.idField.equals(id));
     //PomLogger.instance.log.d(deleteBuilder.toSql());

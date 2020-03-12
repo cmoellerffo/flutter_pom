@@ -46,7 +46,7 @@ abstract class BaseModelContext<T extends Table> {
   Future<void> putRange(List<T> obj, {BaseModelTransaction transaction});
   Future<void> delete(T obj, {BaseModelTransaction transaction});
   Future<void> deleteRange(List<T> objList, {BaseModelTransaction transaction});
-  Future<void> deleteById(int id, {BaseModelTransaction transaction});
+  Future<void> deleteById(dynamic id, {BaseModelTransaction transaction});
   Future<void> deleteAll({BaseModelTransaction transaction});
 
   Future<Iterable<T>> where(bool test(T element));
