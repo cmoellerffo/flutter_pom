@@ -34,6 +34,7 @@ import 'package:flutter_pom/flutter_pom.dart';
 typedef QuerySelectBuilder SelectBuilder(QuerySelectBuilder builder);
 typedef QueryCountBuilder CountBuilder(QueryCountBuilder builder);
 typedef QueryDistinctBuilder DistinctBuilder(QueryDistinctBuilder builder);
+typedef QueryDeleteBuilder DeleteBuilder(QueryDeleteBuilder builder);
 
 /// Abstract class
 abstract class BaseModelContext<T extends Table> {
@@ -44,10 +45,11 @@ abstract class BaseModelContext<T extends Table> {
   Future<void> updateRange(List<T> objList, {BaseModelTransaction transaction});
   Future<void> put(T obj, {BaseModelTransaction transaction});
   Future<void> putRange(List<T> obj, {BaseModelTransaction transaction});
-  Future<void> delete(T obj, {BaseModelTransaction transaction});
+  Future<void> deleteEntity(T obj, {BaseModelTransaction transaction});
   Future<void> deleteRange(List<T> objList, {BaseModelTransaction transaction});
   Future<void> deleteById(dynamic id, {BaseModelTransaction transaction});
   Future<void> deleteAll({BaseModelTransaction transaction});
+  Future<void> delete([DeleteBuilder callback]);
 
   Future<Iterable<T>> where(bool test(T element));
 

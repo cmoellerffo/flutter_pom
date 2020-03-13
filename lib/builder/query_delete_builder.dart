@@ -31,13 +31,13 @@ import 'package:flutter_pom/builder/selectors/sql_where_selector.dart';
 import 'package:flutter_pom/model/sql_types.dart';
 import 'package:flutter_pom/model/table.dart';
 
-class DeleteBuilder {
+class QueryDeleteBuilder {
   SQLWhereSelector _whereSelector;
   Table _table;
 
-  DeleteBuilder(this._table);
+  QueryDeleteBuilder(this._table);
 
-  DeleteBuilder where(SQLCondition condition) {
+  QueryDeleteBuilder where(SQLCondition condition) {
     if (_whereSelector != null)
       throw UnsupportedError("There is already a 'where' clause defined");
     _whereSelector = SQLWhereSelector(condition);

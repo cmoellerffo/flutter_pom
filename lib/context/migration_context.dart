@@ -44,4 +44,8 @@ class MigrationContext {
         "ALTER TABLE ${table.tableName} ADD COLUMN $columnDefinition";
     return await db.dbHandle.execute(statement);
   }
+
+  Future<void> executeRaw(String query) async {
+    return await db.dbHandle.execute(query);
+  }
 }

@@ -66,5 +66,5 @@ export 'builder/query_select_builder.dart';
 export 'builder/selectors/sql_condition.dart';
 export 'builder/selectors/sql_selector.dart';
 export 'builder/selectors/sql_where_selector.dart';
-export 'builder/delete_builder.dart';
+export 'builder/query_delete_builder.dart';
 export 'builder/query_count_builder.dart';

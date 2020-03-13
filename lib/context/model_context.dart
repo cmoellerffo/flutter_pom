@@ -28,7 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import 'dart:async';
 
-import 'package:flutter_pom/builder/delete_builder.dart';
+import 'package:flutter_pom/builder/query_delete_builder.dart';
 import 'package:flutter_pom/builder/query_count_builder.dart';
 import 'package:flutter_pom/builder/query_distinct_builder.dart';
 import 'package:flutter_pom/builder/update_builder.dart';
@@ -229,19 +229,30 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
   }
 
   /// Deletes an item by obj
-  Future<void> delete(T obj, {BaseModelTransaction transaction}) async {
+  Future<void> deleteEntity(T obj, {BaseModelTransaction transaction}) async {
     return await deleteById(obj.idField.value, transaction: transaction);
+  }
+
+  /// Delete by query
+  Future<void> delete([DeleteBuilder callback]) async {
+    var querySelectBuilder = QueryDeleteBuilder(_table);
+
+    if (callback != null) {
+      querySelectBuilder = callback(querySelectBuilder);
+    }
+
+    return await _db.dbHandle.execute(querySelectBuilder.toSql());
   }
 
   /// Deletes a range of items
   Future<void> deleteRange(List<T> objList, {BaseModelTransaction transaction}) async {
-    return objList.forEach((f) async => await delete(f, transaction: transaction));
+    return objList.forEach((f) async => await deleteEntity(f, transaction: transaction));
   }
 
   /// Deletes an item by id
   Future<void> deleteById(dynamic id, {BaseModelTransaction transaction}) async {
     var deleteBuilder =
-        DeleteBuilder(_table).where(_table.idField.equals(id));
+        QueryDeleteBuilder(_table).where(_table.idField.equals(id));
     //PomLogger.instance.log.d(deleteBuilder.toSql());
 
     if (transaction != null) {
@@ -255,7 +266,7 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
 
   /// Deletes all data from the table
   Future<void> deleteAll({BaseModelTransaction transaction}) async {
-    var builderSql = DeleteBuilder(_table).toSql();
+    var builderSql = QueryDeleteBuilder(_table).toSql();
     //PomLogger.instance.log.d(builderSql);
 
     if (transaction != null) {
