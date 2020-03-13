@@ -1,3 +1,7 @@
+## [0.1.26+1] - 13.03.2020
+
+* Fixed NullException bug when get(id) returned empty content.
+
 ## [0.1.26] - 11.03.2020
 
 * Added support for Transactions

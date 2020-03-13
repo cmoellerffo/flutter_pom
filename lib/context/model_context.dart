@@ -154,7 +154,12 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     var list = await select((q) {
       return q.where(_table.idField.equals(temporaryEntity.idField.value));
     });
-    return list.first;
+
+    if (list != null && list.length > 0) {
+      return list.first;
+    } else {
+      return null;
+    }
   }
 
   /// Updates the object
