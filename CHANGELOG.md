@@ -1,3 +1,12 @@
+## [0.1.27] - 26.03.2020
+
+* Fixed Migration: Bug that prevented the correct migration of non-versioned databases
+* Added 'enableMigrations()' and 'disableMigrations()'
+
+## [0.1.26+2] - 26.03.2020
+
+* Added new QueryBuilder for delete() queries. 
+
 ## [0.1.26+1] - 13.03.2020
 
 * Fixed NullException bug when get(id) returned empty content.

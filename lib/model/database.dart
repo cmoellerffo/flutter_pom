@@ -148,14 +148,7 @@ abstract class Database {
         newMigrationInfo.name.value = table.tableName;
         newMigrationInfo.tableRevision.value = table.revision;
         await _migrationContext.put(newMigrationInfo);
-
-        var tableInfo =
-        await _migrationContext.select((q) {
-          return q.where(_migrationContext.fields.name.equals(table.tableName));
-        });
-
-        await _migrateTable(tableInfo.first, table);
-        /// if there is more than one model, this is no good!
+        print("INFO: Table '$dbName.${table.tableName} was unversioned before. Skipping first-time migration.'");
       } else if (tableInfo.length > 1) {
         print("There is more than one migration info. Removing all from database. Please restart the app.");
         await _migrationContext.deleteAll();
@@ -214,7 +207,17 @@ abstract class Database {
     return _db.close();
   }
 
+  /// Delete the database
   Future<void> delete() async {
     return await File(dbName).delete();
+  }
+
+  /// Enables the migration for all tables
+  void enableMigrations() {
+    enableMigration = true;
+  }
+  /// Disables the migration for all tables
+  void disableMigrations() {
+    enableMigration = false;
   }
 }
