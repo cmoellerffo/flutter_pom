@@ -1,3 +1,19 @@
+## [0.1.28] - 26.03.2020
+
+* Migration Bugfix
+
+## [0.1.27+3] - 26.03.2020
+
+* Migration Bugfix
+
+## [0.1.27+2] - 26.03.2020
+
+* Debug Build
+
+## [0.1.27+1] - 26.03.2020
+
+* Removed 'autoOpen' property for Databases. Major!!
+
 ## [0.1.27] - 26.03.2020
 
 * Fixed Migration: Bug that prevented the correct migration of non-versioned databases

@@ -114,8 +114,9 @@ abstract class Table {
       MigrationContext context, int fromRevision, int toRevision) async {
     var newFields = _fields.where((f) => f.revision == toRevision);
     if (newFields != null && newFields.length > 0) {
-      for (var field in _fields) {
-        context.addField(field);
+      for (var field in newFields) {
+        print("Adding field '${field.name}'");
+        await context.addField(field);
       }
     }
   }

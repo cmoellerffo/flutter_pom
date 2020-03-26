@@ -93,13 +93,8 @@ abstract class Database {
   bool enableMigration = false;
 
   /// Creates a new Instance
-  Database(String name, {this.autoOpen = true, this.enableMigration = false}) {
+  Database(String name, {this.enableMigration = false}) {
     _name = name;
-
-    if (this.autoOpen) {
-      //PomLogger.instance.log.d("Auto-opening database '$name'");
-      open();
-    }
   }
 
   /// Returns a new [ModelTransaction] transaction container for executing
@@ -136,6 +131,7 @@ abstract class Database {
         /// if the table revision > than the stored revision
         if (migrationInfo.tableRevision.value < table.revision) {
           /// run migration for every revision between current and target
+          print("Migrating '$dbName.${table.tableName}' from r${migrationInfo.tableRevision.value} to r${table.revision}");
           await _migrateTable(migrationInfo, table);
         } else if (migrationInfo.tableRevision.value > table.revision) {
           throw AssertionError(
@@ -148,7 +144,7 @@ abstract class Database {
         newMigrationInfo.name.value = table.tableName;
         newMigrationInfo.tableRevision.value = table.revision;
         await _migrationContext.put(newMigrationInfo);
-        print("INFO: Table '$dbName.${table.tableName} was unversioned before. Skipping first-time migration.'");
+        print("INFO: Table '$dbName.${table.tableName}' was unversioned before. Skipping first-time migration.'");
       } else if (tableInfo.length > 1) {
         print("There is more than one migration info. Removing all from database. Please restart the app.");
         await _migrationContext.deleteAll();
@@ -157,7 +153,7 @@ abstract class Database {
   }
 
   Future<void> _migrateTable($MigrationInfo migrationInfo, Table table) async {
-    for (var migrateVersion = migrationInfo.tableRevision.value;
+    for (var migrateVersion = migrationInfo.tableRevision.value + 1;
     migrateVersion <= table.revision;
     migrateVersion++) {
       //PomLogger.instance.log.d("Migrating '${table.tableName}' from Revision ${migrationInfo.tableRevision.value} to $migrateVersion ...");
