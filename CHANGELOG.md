@@ -1,3 +1,7 @@
+## [0.1.29] - 06.05.2020
+
+* Fixed bug in deserialization of Bool field. In case the value is NULL we now default to false.
+
 ## [0.1.28] - 26.03.2020
 
 * Migration Bugfix

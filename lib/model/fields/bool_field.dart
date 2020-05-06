@@ -42,7 +42,8 @@ class BoolField extends Field<bool> {
     } else if (value is String) {
       this.value = (value.toLowerCase() == "true");
     } else
-      throw FieldConstraintError(this, "The value cannot be parsed to bool");
+      //throw FieldConstraintError(this, "The value cannot be parsed to bool");
+      this.value = false;
   }
 
   @override
