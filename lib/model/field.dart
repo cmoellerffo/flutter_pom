@@ -51,6 +51,9 @@ abstract class Field<T> {
     }
   }
 
+  T _defaultValue;
+  T get defaultValue => _defaultValue;
+
   bool _idxUnique = false;
   /// Gets whether the index is unique or not
   bool get idxUnique => _idxUnique;
@@ -118,7 +121,8 @@ abstract class Field<T> {
   }
 
   /// Sets the fields requirement to NOT NULL
-  Field notNull() {
+  Field notNull(T defaultValue) {
+    _defaultValue = defaultValue;
     _notNull = true;
     if (value == null) {
       _value = defaultValue;
@@ -160,8 +164,6 @@ abstract class Field<T> {
   String toString() {
     return toSql(value);
   }
-
-  T get defaultValue;
 
   SQLCondition compare(dynamic value, SQLComparators comparator) {
     return SQLCondition(this, comparator, value);

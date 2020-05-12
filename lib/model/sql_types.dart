@@ -40,6 +40,7 @@ class SQLTypes {
 
   static final String nullValue = "NULL";
   static final String notNull = "NOT $nullValue";
+  static final String defaultValue = "DEFAULT";
 
   static final String stringIdentifier = "'";
   static final String separator = " ";

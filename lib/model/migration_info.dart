@@ -33,9 +33,9 @@ class $MigrationInfo extends Table {
 
   IdField id = IdField("id").autoIncrement();
 
-  StringField name = StringField("table_name").notNull();
+  StringField name = StringField("table_name").notNull("");
 
-  IntegerField tableRevision = IntegerField("revision").notNull();
+  IntegerField tableRevision = IntegerField("revision").notNull(0);
 
   @override
   Table getInstance() {

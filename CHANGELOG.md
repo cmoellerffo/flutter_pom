@@ -1,3 +1,7 @@
+## [0.1.30] - 06.05.2020
+
+* Added Support for DefaultValues on .notNull(T defaultValue)
+
 ## [0.1.29] - 06.05.2020
 
 * Fixed bug in deserialization of Bool field. In case the value is NULL we now default to false.

@@ -322,6 +322,8 @@ class ModelContext<T extends Table> implements BaseModelContext<T> {
     }
     if (f.isNotNull) {
       builder.add(SQLTypes.notNull);
+      builder.add(SQLTypes.defaultValue);
+      builder.add(f.toSql(f.defaultValue));
     }
 
     return builder.join(SQLTypes.separator);

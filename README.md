@@ -47,7 +47,7 @@ class SampleTable extends Table {
   // Each field corresponds to a table column
   
   final IdField id = IdField("id").autoIncrement();
-  final StringField str = StringField("str");
+  final StringField str = StringField("str").notNull("");
   
   // You have to override the method 'getInstance' for the
   // deserializer to get a new instance of your type as dart

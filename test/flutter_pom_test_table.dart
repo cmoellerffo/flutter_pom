@@ -53,7 +53,7 @@ class FlutterPomTestTable extends Table {
 
   StringField stringField = StringField("string_field");
 
-  StringField notNullField = StringField("string_not_null").notNull();
+  StringField notNullField = StringField("string_not_null").notNull("");
 
   BoolField boolField = BoolField("bool_field");
 
