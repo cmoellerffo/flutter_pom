@@ -53,6 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
   SampleDb db = SampleDb();
 
   void _incrementCounter() async {
+    await db.open();
+
     var c1 = await db.of<SampleTable>();
     var c2 = await db.of<SampleTable2>();
 

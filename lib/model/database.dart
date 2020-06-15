@@ -93,7 +93,7 @@ abstract class Database {
   bool enableMigration = false;
 
   /// Creates a new Instance
-  Database(String name, {this.enableMigration = false}) {
+  Database(String name, {this.enableMigration = true}) {
     _name = name;
   }
 
@@ -116,17 +116,23 @@ abstract class Database {
     _migrationContext = ModelContext<$MigrationInfo>(this, _migrationInfo);
     await _migrationContext.create();
 
-    _tables.forEach((t, v) async {
+    for(var t in _tables.keys) {
       var table = _tables[t];
+      print("DEBUG: Table ${table.tableName}: ${table.revision}");
+      
       var tableInfo =
         await _migrationContext.select((q) {
           return q.where(_migrationContext.fields.name.equals(table.tableName));
         });
+      
+      print("DEBUG: MigrationInfo size: ${tableInfo.length}");
 
       /// If there is exactly one entry inside the model cache table
       if (tableInfo.length == 1) {
         /// Get item
         var migrationInfo = tableInfo.first;
+
+        print("DEBUG: MigrationInfo revision: ${migrationInfo.tableRevision.value}");
 
         /// if the table revision > than the stored revision
         if (migrationInfo.tableRevision.value < table.revision) {
@@ -135,7 +141,7 @@ abstract class Database {
           await _migrateTable(migrationInfo, table);
         } else if (migrationInfo.tableRevision.value > table.revision) {
           throw AssertionError(
-              "The table metadata for '${table.tableName}' are ahead of table the actual revision");
+              "The table metadata for '${table.tableName}' are ahead of the current table revision");
         }
         /// If there is no model cached we create a new entry
       } else if (tableInfo.length == 0) {
@@ -149,22 +155,33 @@ abstract class Database {
         print("There is more than one migration info. Removing all from database. Please restart the app.");
         await _migrationContext.deleteAll();
       }
-    });
+    }
   }
 
   Future<void> _migrateTable($MigrationInfo migrationInfo, Table table) async {
     for (var migrateVersion = migrationInfo.tableRevision.value + 1;
     migrateVersion <= table.revision;
     migrateVersion++) {
-      //PomLogger.instance.log.d("Migrating '${table.tableName}' from Revision ${migrationInfo.tableRevision.value} to $migrateVersion ...");
+      print("... Revision update $migrateVersion.");
       await table.migrate(MigrationContext(this, table),
           migrationInfo.tableRevision.value, migrateVersion);
+
       migrationInfo.tableRevision.value = migrateVersion;
-      await _migrationContext.update(migrationInfo);
+
+      // This hack is introduced as multiple revisions make problems on put updates.
+      // We don't know the ID of the field after updating, what makes things very tricky
+
+      await _migrationContext.delete((q) {
+        return q.where(_migrationContext.fields.name.equals(table.tableName));
+      });
+
+      // Lets insert the newly generated table info into the context
+      await _migrationContext.put(migrationInfo);
     }
   }
 
   Future<void> _initializeDatabase() async {
+    print("Initializing database ...");
     _tables = initializeDatabase();
 
     if (_tables == null) {

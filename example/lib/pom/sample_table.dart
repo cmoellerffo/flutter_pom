@@ -15,6 +15,15 @@ class SampleTable extends Table {
   /// Gets or sets the value
   final DateTimeField dateTime = DateTimeField("dateTime");
 
+  final IntegerField priority = IntegerField("priority")
+                        ..atRevision(3);
+
+  final IntegerField priority2 = IntegerField("priority2")
+    ..atRevision(5);
+
+  final IntegerField priority3 = IntegerField("priority2")
+    ..atRevision(6);
+
   @override
   Table getInstance() {
     return SampleTable();
@@ -25,7 +34,9 @@ class SampleTable extends Table {
     return [
       id,
       counterValue,
-      dateTime
+      dateTime,
+      priority,
+      priority2
     ];
   }
 
@@ -38,6 +49,6 @@ class SampleTable extends Table {
   }
 
   @override
-  int get revision => 2;
+  int get revision => 6;
 
 }

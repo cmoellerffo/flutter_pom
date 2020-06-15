@@ -1,3 +1,8 @@
+## [0.1.31] - 15.06.2020
+
+* Added Log Output for Migration bugfix support
+* Made forEach on table map non-async to prevent problems when migrating
+
 ## [0.1.30] - 06.05.2020
 
 * Added Support for DefaultValues on .notNull(T defaultValue)
