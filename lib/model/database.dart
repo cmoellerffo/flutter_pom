@@ -112,9 +112,13 @@ abstract class Database {
   ///
   /// - **KEEP IN MIND** that we currently only support **Adding Columns**
   ///
-  Future<void> _doMigrations() async {
+  Future<void> _doMigrations({bool force = false}) async {
     _migrationContext = ModelContext<$MigrationInfo>(this, _migrationInfo);
     await _migrationContext.create();
+
+    if (force) {
+      print("WARNING: Migration of tables forced!");
+    }
 
     for(var t in _tables.keys) {
       var table = _tables[t];
@@ -128,14 +132,17 @@ abstract class Database {
       print("DEBUG: MigrationInfo size: ${tableInfo.length}");
 
       /// If there is exactly one entry inside the model cache table
-      if (tableInfo.length == 1) {
+      if (tableInfo.length == 1 || force) {
         /// Get item
         var migrationInfo = tableInfo.first;
 
         print("DEBUG: MigrationInfo revision: ${migrationInfo.tableRevision.value}");
 
         /// if the table revision > than the stored revision
-        if (migrationInfo.tableRevision.value < table.revision) {
+        if (migrationInfo.tableRevision.value < table.revision || force) {
+          if (force) {
+            migrationInfo.tableRevision.value = 1;
+          }
           /// run migration for every revision between current and target
           print("Migrating '$dbName.${table.tableName}' from r${migrationInfo.tableRevision.value} to r${table.revision}");
           await _migrateTable(migrationInfo, table);
@@ -213,6 +220,14 @@ abstract class Database {
   Future<void> open() async {
     _db = await b.openDatabase(dbName);
     await _initializeDatabase();
+  }
+
+  /// Forcefully migrate tables (replay all migrations)
+  /// This will eventually lead to some SQL errors due to duplicate field
+  /// names. But it will help keeping old DB versions data intact when
+  /// developers get confused about their changes.
+  Future<void> forceMigration() async {
+    await _doMigrations(force: true);
   }
 
   /// Close the connection

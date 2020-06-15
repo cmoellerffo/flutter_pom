@@ -1,3 +1,7 @@
+## [0.1.31+1] - 15.06.2020
+
+* Added .forceMigration() method to Database instance
+
 ## [0.1.31] - 15.06.2020
 
 * Added Log Output for Migration bugfix support
