@@ -30,15 +30,26 @@ import 'package:flutter_pom/builder/selectors/sql_selector.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 
 class SQLCondition extends SQLSelector {
+
+  /// The target field
   Field field;
+
+  /// The SQL Comparator used for the condition
   SQLComparators comparator;
+
+  /// A value to compare to
   dynamic value;
 
+  /// The logical SQL operator
   SQLLogicOperator operator = SQLLogicOperator.none;
+
+  /// A child condition
   SQLCondition child;
 
+  /// .ctor
   SQLCondition(this.field, this.comparator, this.value);
 
+  /// Generates the SQL compatible code
   @override
   String toSql() {
     String comparatorValue;

@@ -26,46 +26,35 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-library flutter_pom;
+import 'dart:typed_data';
 
-export 'model/table.dart';
-export 'model/field.dart';
-export 'model/database.dart';
-export 'model/serializable.dart';
-export 'context/base_model_transaction.dart';
+import 'package:flutter_pom/model/field.dart';
+import 'package:flutter_pom/model/sql_types.dart';
 
-// Fields
+class BlobField extends Field<Uint8List> {
+  BlobField(String name) : super(name);
 
-export 'model/fields/integer_field.dart';
-export 'model/fields/id_field.dart';
-export 'model/fields/string_field.dart';
-export 'model/fields/double_field.dart';
-export 'model/fields/datetime_field.dart';
-export 'model/fields/bool_field.dart';
-export 'model/fields/secure_string_field.dart';
-export 'model/fields/object_field.dart';
-export 'model/fields/key_field.dart';
-export 'model/fields/blob_field.dart';
+  @override
+  void fromSqlCompatibleValue(dynamic value) {
+    new Uint8List.fromList(value);
+  }
 
-// Errors
+  @override
+  String get sqlType => SQLTypes.blob;
 
-export 'errors/field_constraint_error.dart';
-export 'errors/missing_primary_key_error.dart';
-export 'errors/multiple_primary_key_error.dart';
-export 'errors/table_configuration_error.dart';
-export 'errors/missing_field_error.dart';
-export 'errors/duplicate_field_error.dart';
+  @override
+  bool supportsAutoIncrement() {
+    return false;
+  }
 
-// Helpers
+  @override
+  bool get supportsPrimaryKey => false;
 
-export 'model/sql_types.dart';
-export 'extensions/list_extensions.dart';
+  @override
+  Uint8List get defaultValue => Uint8List(0);
 
-// Query Builder
-
-export 'builder/query_select_builder.dart';
-export 'builder/selectors/sql_condition.dart';
-export 'builder/selectors/sql_selector.dart';
-export 'builder/selectors/sql_where_selector.dart';
-export 'builder/query_delete_builder.dart';
-export 'builder/query_count_builder.dart';
+  @override
+  String toSql(Uint8List f) {
+    return String.fromCharCodes(f);
+  }
+}
