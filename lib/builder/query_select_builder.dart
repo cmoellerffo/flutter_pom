@@ -79,7 +79,7 @@ class QuerySelectBuilder extends QueryBuilder {
 
   QuerySelectBuilder offset(int start) {
     if (_offset != null)
-      throw UnsupportedError("There is already a 'offsert' clause defined");
+      throw UnsupportedError("There is already a 'offset' clause defined");
     _offset = start;
     return this;
   }

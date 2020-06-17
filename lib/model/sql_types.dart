@@ -34,6 +34,7 @@ class SQLTypes {
   static final String integer = "INTEGER";
   static final String boolean = integer;
   static final String dateTime = "DATETIME";
+  static final String blob = "BLOB";
 
   static final String primaryKey = "PRIMARY KEY";
   static final String autoIncrement = "AUTOINCREMENT";
