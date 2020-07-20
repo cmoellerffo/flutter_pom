@@ -1,3 +1,7 @@
+## [0.1.31+2] - 20.07.2020
+
+* Fixed bug in ObjectField
+
 ## [0.1.31+1] - 15.06.2020
 
 * Added .forceMigration() method to Database instance

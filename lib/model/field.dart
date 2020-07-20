@@ -29,6 +29,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import 'package:flutter_pom/errors/field_constraint_error.dart';
 import 'package:flutter_pom/flutter_pom.dart';
 
+/// Abstract Table Field implementation.
+///
+/// You can create your own field types by deriving from this class like
+///
+/// ´´´dart
+/// class MyField extends Field<MyType> {
+/// ...
+/// }
+/// ´´´
 abstract class Field<T> {
   String _name;
 

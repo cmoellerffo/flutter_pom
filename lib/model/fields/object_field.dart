@@ -51,7 +51,8 @@ class ObjectField<T extends Serializable> extends Field {
   @override
   String toSql(v) {
     var retVal = v.toJson();
-    return "'$retVal'";
+    var jsonData = retVal.toString().replaceAll("'", "\'");
+    return "'$jsonData'";
   }
 
   @override
