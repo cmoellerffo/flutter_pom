@@ -1,3 +1,35 @@
+## [0.1.32] - 28.08.2020
+
+* Add more debug output 
+
+## [0.1.31+9] - 21.07.2020
+
+* Fixed misleading conversion
+
+## [0.1.31+8] - 21.07.2020
+
+* Using jsonEncode to encode json values now
+
+## [0.1.31+7] - 21.07.2020
+
+* Added Error descriptions
+
+## [0.1.31+6] - 21.07.2020
+
+* Added jsonDecode
+
+## [0.1.31+5] - 21.07.2020
+
+* Added deserialization method for Object fields
+
+## [0.1.31+4] - 20.07.2020
+
+* Fixed bug in ObjectField
+
+## [0.1.31+3] - 20.07.2020
+
+* Fixed bug in ObjectField
+
 ## [0.1.31+2] - 20.07.2020
 
 * Fixed bug in ObjectField

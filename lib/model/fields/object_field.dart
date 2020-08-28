@@ -26,6 +26,8 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import 'dart:convert';
+
 import 'package:flutter_pom/flutter_pom.dart';
 import 'package:flutter_pom/model/sql_types.dart';
 
@@ -41,18 +43,28 @@ class ObjectField<T extends Serializable> extends Field {
   @override
   String get sqlType => SQLTypes.text;
 
+  Map<String, dynamic> _jsonValue;
+  /// Gets the json Value
+  Map<String, dynamic> get jsonValue => _jsonValue;
+
   @override
   void fromSqlCompatibleValue(value) {
-    if (value is T) {
-      this.value = value;
-    } else {}
+    if (value is String) {
+      try {
+        _jsonValue = jsonDecode(value.replaceAll("\'", "\""));
+      } catch (e) {
+        throw JsonUnsupportedObjectError(value);
+      }
+    } else {
+      throw TypeError();
+    }
   }
 
   @override
   String toSql(v) {
-    var retVal = v.toJson();
-    var jsonData = retVal.toString().replaceAll("'", "\'");
-    return "'$jsonData'";
+    var retVal = jsonEncode(v);
+    var jsonData = retVal.replaceAll("\"", "\'");
+    return "\"$jsonData\"";
   }
 
   @override

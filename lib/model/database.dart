@@ -113,6 +113,7 @@ abstract class Database {
   /// - **KEEP IN MIND** that we currently only support **Adding Columns**
   ///
   Future<void> _doMigrations({bool force = false}) async {
+    print("INFO: Running migrations ...");
     _migrationContext = ModelContext<$MigrationInfo>(this, _migrationInfo);
     await _migrationContext.create();
 
@@ -122,21 +123,21 @@ abstract class Database {
 
     for(var t in _tables.keys) {
       var table = _tables[t];
-      print("DEBUG: Table ${table.tableName}: ${table.revision}");
+      print("DEBUG: Found Table ${table.tableName} with Target-Revision: ${table.revision}");
       
       var tableInfo =
         await _migrationContext.select((q) {
           return q.where(_migrationContext.fields.name.equals(table.tableName));
         });
       
-      print("DEBUG: MigrationInfo size: ${tableInfo.length}");
+      print("DEBUG: Stored Table Revision count: ${tableInfo.length}");
 
       /// If there is exactly one entry inside the model cache table
       if (tableInfo.length == 1 || force) {
         /// Get item
         var migrationInfo = tableInfo.first;
 
-        print("DEBUG: MigrationInfo revision: ${migrationInfo.tableRevision.value}");
+        print("DEBUG: Stored Table Revision: ${migrationInfo.tableRevision.value}");
 
         /// if the table revision > than the stored revision
         if (migrationInfo.tableRevision.value < table.revision || force) {
@@ -144,7 +145,7 @@ abstract class Database {
             migrationInfo.tableRevision.value = 1;
           }
           /// run migration for every revision between current and target
-          print("Migrating '$dbName.${table.tableName}' from r${migrationInfo.tableRevision.value} to r${table.revision}");
+          print("INFO: Migrating '$dbName.${table.tableName}' from Revision ${migrationInfo.tableRevision.value} to ${table.revision} ...");
           await _migrateTable(migrationInfo, table);
         } else if (migrationInfo.tableRevision.value > table.revision) {
           throw AssertionError(
@@ -152,15 +153,17 @@ abstract class Database {
         }
         /// If there is no model cached we create a new entry
       } else if (tableInfo.length == 0) {
-        //PomLogger.instance.log..i("No model cache found for table ${table.tableName}.");
+        print("INFO: No model cache found for table ${table.tableName}. If this is the first execution this is the predicted behaviour.");
         var newMigrationInfo = $MigrationInfo();
         newMigrationInfo.name.value = table.tableName;
         newMigrationInfo.tableRevision.value = table.revision;
         await _migrationContext.put(newMigrationInfo);
         print("INFO: Table '$dbName.${table.tableName}' was unversioned before. Skipping first-time migration.'");
       } else if (tableInfo.length > 1) {
-        print("There is more than one migration info. Removing all from database. Please restart the app.");
-        await _migrationContext.deleteAll();
+        print("ERROR: There is more than one migration info. Removing all from database. Please restart the app.");
+        await _migrationContext.delete((q) {
+          return q.where(_migrationContext.fields.name.equals(table.tableName));
+        });
       }
     }
   }
@@ -188,7 +191,7 @@ abstract class Database {
   }
 
   Future<void> _initializeDatabase() async {
-    print("Initializing database ...");
+    print("INFO: Initializing database ...");
     _tables = initializeDatabase();
 
     if (_tables == null) {
