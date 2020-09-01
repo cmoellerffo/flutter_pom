@@ -1,3 +1,7 @@
+## [0.1.33] - 01.09.2020
+
+* Added Repair Function for invalid migration info data
+
 ## [0.1.32] - 28.08.2020
 
 * Add more debug output 
