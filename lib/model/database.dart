@@ -132,6 +132,17 @@ abstract class Database {
       
       print("DEBUG: Stored Table Revision count: ${tableInfo.length}");
 
+      if (tableInfo.length > 1) {
+        print("INFO: Repairing mismatch Migration Table Info ...");
+
+        tableInfo.sort((a, b) => a.tableRevision.value.compareTo(b.tableRevision.value));
+
+        for (var i = 0; i < tableInfo.length - 1; ++i) {
+          print(" ... Deleting migration info for Revision ${tableInfo[i].tableRevision.value}");
+          await _migrationContext.deleteEntity(tableInfo[i]);
+        }
+      }
+
       /// If there is exactly one entry inside the model cache table
       if (tableInfo.length == 1 || force) {
         /// Get item
