@@ -92,6 +92,8 @@ abstract class Database {
   /// Gets or sets whether to do auto migration
   bool enableMigration = false;
 
+  bool _mutex = false;
+
   /// Creates a new Instance
   Database(String name, {this.enableMigration = true}) {
     _name = name;
@@ -141,6 +143,9 @@ abstract class Database {
           print(" ... Deleting migration info for Revision ${tableInfo[i].tableRevision.value}");
           await _migrationContext.deleteEntity(tableInfo[i]);
         }
+
+        /// FIX: Set last item to active list
+        tableInfo = <$MigrationInfo>[tableInfo[tableInfo.length - 1]];
       }
 
       /// If there is exactly one entry inside the model cache table
@@ -230,10 +235,30 @@ abstract class Database {
     return context;
   }
 
+  bool _lock() {
+    if (!_mutex) {
+      _mutex = true;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool _release() {
+    if (_mutex) {
+      _mutex = false;
+      return true;
+    }
+    return false;
+  }
+
   /// opens the database connection
   Future<void> open() async {
-    _db = await b.openDatabase(dbName);
-    await _initializeDatabase();
+    if (!_lock()) {
+      _db = await b.openDatabase(dbName);
+      await _initializeDatabase();
+      _release();
+    }
   }
 
   /// Forcefully migrate tables (replay all migrations)

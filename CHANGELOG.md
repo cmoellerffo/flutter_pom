@@ -1,3 +1,8 @@
+## [0.1.33+1] - 01.09.2020
+
+* Added Repair Function for invalid migration info data
+* Added mutex for opening db only once
+
 ## [0.1.33] - 01.09.2020
 
 * Added Repair Function for invalid migration info data
